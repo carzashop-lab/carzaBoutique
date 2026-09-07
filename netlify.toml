@@ -1,0 +1,22 @@
+# Carza — configuration Netlify
+# Le site est un seul fichier index.html a la racine ; les fonctions serveur
+# vivent dans netlify/functions et se deploient a chaque push GitHub.
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+# Adresses courtes : /api/checkout au lieu de /.netlify/functions/checkout
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

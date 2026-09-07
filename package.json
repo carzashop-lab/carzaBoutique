@@ -1,0 +1,12 @@
+{
+  "name": "carza-boutique",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@netlify/neon": "^0.1.0"
+  },
+  "devDependencies": {
+    "@netlify/functions": "^6.0.0",
+    "@types/node": "^26.5.0"
+  }
+}
