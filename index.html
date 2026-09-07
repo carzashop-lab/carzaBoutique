@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carza — Rituel visage, cheveux et barbe</title>
+<meta name="description" content="Outils de pierre froide et de soin. Trois minutes le matin, rien à appliquer, rien de superflu.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Archivo:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --frost:#EDF1F0; --paper:#F7F9F8; --ink:#131C17; --slate:#54635C; --mute:#87938C;
+  --line:#D3DDD8; --jade:#2B6A50; --quartz:#BE8D88;
+  --deep:#0E1917; --on-deep:#EAF0EE; --on-deep-mute:#93A6A1; --line-deep:#25352F;
+  --shadow:rgba(10,22,18,.14);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --frost:#0C1412; --paper:#131D19; --ink:#E8EEEB; --slate:#9BAAA3; --mute:#75847C;
+    --line:#21302A; --jade:#66C199; --quartz:#D2A09A;
+    --deep:#070E0C; --on-deep:#E8EEEB; --on-deep-mute:#93A6A1; --line-deep:#1B2723;
+    --shadow:rgba(0,0,0,.5);
+  }
+}
+:root[data-theme="dark"]{
+  --frost:#0C1412; --paper:#131D19; --ink:#E8EEEB; --slate:#9BAAA3; --mute:#75847C;
+  --line:#21302A; --jade:#66C199; --quartz:#D2A09A;
+  --deep:#070E0C; --on-deep:#E8EEEB; --on-deep-mute:#93A6A1; --line-deep:#1B2723;
+  --shadow:rgba(0,0,0,.5);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--frost);color:var(--ink);font-family:"Archivo",-apple-system,BlinkMacSystemFont,sans-serif;font-size:15.5px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Instrument Serif",Georgia,serif;font-weight:400;margin:0;text-wrap:balance;letter-spacing:0}
+a{color:inherit}
+img{max-width:100%;display:block}
+button{font:inherit;cursor:pointer;color:inherit}
+.wrap{max-width:1280px;margin:0 auto;padding:0 clamp(18px,4vw,42px)}
+.label{font-size:10px;letter-spacing:.24em;text-transform:uppercase;font-weight:700;color:var(--mute);margin:0}
+
+.ticker{background:var(--deep);color:var(--on-deep);overflow:hidden;border-bottom:1px solid var(--line-deep)}
+.tt{display:flex;width:max-content;animation:sl 36s linear infinite}
+@keyframes sl{to{transform:translateX(-50%)}}
+.tt span{padding:11px 26px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;white-space:nowrap;display:flex;align-items:center;gap:26px}
+.tt span::after{content:"✳";color:var(--jade);font-size:10px}
+
+header{position:sticky;top:0;z-index:60;background:var(--deep);color:var(--on-deep);border-bottom:1px solid var(--line-deep)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:70px;gap:20px}
+.logo{font-family:"Instrument Serif",serif;font-size:26px;letter-spacing:.34em;text-decoration:none;padding-left:.34em;line-height:1}
+nav{display:flex;gap:30px;font-size:13.5px}
+nav a{text-decoration:none;color:var(--on-deep-mute);transition:color .2s}
+nav a:hover{color:var(--on-deep)}
+.cart-btn{border:1px solid var(--line-deep);background:transparent;color:var(--on-deep);border-radius:999px;padding:9px 19px;font-size:13.5px;font-weight:500;display:flex;align-items:center;gap:9px;transition:.2s}
+.cart-btn:hover{border-color:var(--jade);color:var(--jade)}
+.count{background:var(--jade);color:#04120C;border-radius:999px;min-width:19px;height:19px;font-size:11px;font-weight:700;display:grid;place-items:center;padding:0 6px}
+.count[hidden]{display:none}
+
+.hero{position:relative;background:var(--deep);color:var(--on-deep);overflow:hidden}
+.hero-in{display:grid;grid-template-columns:1.02fr .98fr;align-items:center;min-height:min(78vh,660px)}
+.hero-copy{padding:clamp(44px,6vw,80px) clamp(28px,4vw,60px) clamp(52px,7vw,88px) max(clamp(18px,4vw,42px),calc((100vw - 1280px)/2 + clamp(18px,4vw,42px)));position:relative;z-index:2}
+.hero h1{font-size:clamp(48px,7vw,96px);line-height:.95;letter-spacing:-.018em;margin:20px 0 0}
+.hero h1 i{font-style:italic;color:#9FC3C0}
+.hero p{color:var(--on-deep-mute);font-size:16.5px;max-width:42ch;margin:24px 0 0}
+.hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
+.hero-media{position:relative;align-self:stretch;min-height:320px}
+.hero-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-media::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,var(--deep) 0%,rgba(14,25,23,.5) 22%,rgba(14,25,23,0) 60%)}
+
+.btn{background:var(--jade);color:#04120C;border:1px solid var(--jade);border-radius:999px;padding:15px 32px;font-size:14.5px;font-weight:700;text-decoration:none;display:inline-block;transition:transform .18s,filter .18s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn-line{background:transparent;color:inherit;border-color:currentColor;font-weight:500;opacity:.85}
+.btn-line:hover{opacity:1;filter:none}
+
+.strip{border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr)}
+.strip div{padding:22px 20px;font-size:13px;color:var(--slate);text-align:center}
+.strip div+div{border-left:1px solid var(--line)}
+.strip b{color:var(--ink);font-weight:700}
+
+section{padding:clamp(60px,7vw,96px) 0}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:40px;margin-bottom:clamp(28px,4vw,44px)}
+.head h2{font-size:clamp(32px,4.2vw,52px);line-height:1.02;margin-top:10px}
+.head>p{color:var(--slate);font-size:14.5px;max-width:38ch;margin:0 0 6px}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(22px,2.6vw,36px)}
+.card{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.card.big{grid-column:span 3;display:grid;grid-template-columns:1.05fr .95fr;gap:0}
+.gal{position:relative;background:var(--frost);display:flex;flex-direction:column}
+.gal .main{position:relative;aspect-ratio:4/5;overflow:hidden;cursor:zoom-in}
+.card.big .gal .main{aspect-ratio:auto;flex:1;min-height:400px}
+.gal .main img{width:100%;height:100%;object-fit:cover;transition:opacity .25s}
+.flag{position:absolute;top:0;left:0;background:var(--jade);color:#04120C;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;padding:6px 12px;z-index:2}
+.thumbs{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;background:var(--line);border-top:1px solid var(--line)}
+.thumbs button{aspect-ratio:1;padding:0;border:none;background:var(--frost);overflow:hidden;position:relative}
+.thumbs img{width:100%;height:100%;object-fit:cover;opacity:.55;transition:opacity .2s}
+.thumbs button.on img,.thumbs button:hover img{opacity:1}
+.thumbs button.on::after{content:"";position:absolute;inset:0;border:2px solid var(--jade)}
+
+.body{padding:20px clamp(16px,1.6vw,24px) 22px;display:flex;flex-direction:column;flex:1}
+.card.big .body{padding:clamp(26px,3vw,44px);justify-content:center}
+.body h3{font-size:clamp(21px,2vw,26px);line-height:1.12}
+.card.big .body h3{font-size:clamp(28px,3vw,40px)}
+.tag{color:var(--mute);font-size:13px;margin:5px 0 0}
+.desc{color:var(--slate);font-size:14px;margin:14px 0 0;max-width:52ch}
+.card:not(.big) .desc{display:none}
+.specs{margin:20px 0 0;border-top:1px solid var(--line);font-size:13px}
+.card:not(.big) .specs{display:none}
+.specs div{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:9px 0;border-bottom:1px solid var(--line)}
+.specs dt{color:var(--mute);min-width:88px}
+.specs dd{margin:0;text-align:right;color:var(--slate)}
+.prices{display:flex;align-items:baseline;gap:11px;margin-top:16px;font-variant-numeric:tabular-nums}
+.card.big .prices{margin-top:22px}
+.price{font-size:20px;font-weight:700}
+.card.big .price{font-size:26px}
+.was{color:var(--mute);text-decoration:line-through;font-size:13.5px}
+.save{background:color-mix(in srgb,var(--quartz) 22%,transparent);color:var(--quartz);font-size:11px;font-weight:700;padding:3px 8px;border-radius:2px;letter-spacing:.04em}
+.add{margin-top:14px;width:100%;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:13px;font-size:14px;font-weight:600;transition:.18s}
+.card.big .add{background:var(--jade);color:#04120C;border-color:var(--jade);max-width:340px;padding:16px}
+.add:hover{background:var(--ink);color:var(--frost);border-color:var(--ink)}
+.card.big .add:hover{filter:brightness(1.1);background:var(--jade);color:#04120C;border-color:var(--jade)}
+.add.done{background:var(--jade);color:#04120C;border-color:var(--jade)}
+
+.cold{background:var(--deep);color:var(--on-deep);border-top:1px solid var(--line-deep)}
+.cold .label{color:#9FC3C0}
+.cold h2{font-size:clamp(32px,4.2vw,52px);margin:10px 0 0;max-width:17ch}
+.cold>.wrap>p{color:var(--on-deep-mute);max-width:50ch;margin:20px 0 0}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(24px,3vw,48px);margin-top:clamp(38px,4vw,60px)}
+.three>div{border-top:1px solid var(--line-deep);padding-top:20px}
+.three .deg{font-family:"Instrument Serif",serif;font-size:42px;line-height:1;color:#9FC3C0;font-style:italic}
+.three h3{font-size:20px;margin:12px 0 7px}
+.three p{color:var(--on-deep-mute);font-size:14px;margin:0}
+
+details{border-bottom:1px solid var(--line);padding:22px 0}
+summary{cursor:pointer;font-size:17px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:18px;font-weight:500}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";color:var(--jade);font-size:23px;line-height:1;flex-shrink:0}
+details[open] summary::after{content:"–"}
+details p{color:var(--slate);font-size:14.5px;margin:14px 0 0;max-width:68ch}
+
+/* Suivi de commande */
+.track{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.track-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:clamp(32px,5vw,72px);align-items:start}
+.tform{display:grid;gap:12px;margin-top:22px;max-width:400px}
+.tform input{padding:14px 16px;border:1px solid var(--line);border-radius:2px;background:var(--frost);color:var(--ink);font:inherit;width:100%}
+.tform input:focus{outline:2px solid var(--jade);outline-offset:1px}
+.tform button{background:var(--ink);color:var(--frost);border:none;border-radius:999px;padding:14px;font-weight:700;font-size:14.5px}
+.tform button:hover{filter:brightness(1.2)}
+.tmsg{color:#B4483C;font-size:13.5px;min-height:18px;margin:0}
+.tres{display:none}
+.tres.on{display:block}
+.tres h3{font-size:clamp(22px,2.4vw,30px)}
+.tsteps{list-style:none;padding:0;margin:24px 0 0;display:grid}
+.tsteps li{display:grid;grid-template-columns:26px 1fr;gap:16px;padding:0 0 26px;position:relative}
+.tsteps li:last-child{padding-bottom:0}
+.tsteps li::before{content:"";position:absolute;left:12px;top:22px;bottom:0;width:1px;background:var(--line)}
+.tsteps li:last-child::before{display:none}
+.dot{width:25px;height:25px;border-radius:50%;border:1px solid var(--line);background:var(--frost);display:grid;place-items:center;font-size:12px;color:var(--mute);z-index:1}
+.tsteps li.done .dot{background:var(--jade);border-color:var(--jade);color:#04120C;font-weight:700}
+.tsteps li.now .dot{border-color:var(--jade);color:var(--jade);font-weight:700}
+.tsteps b{display:block;font-size:15.5px;font-weight:600}
+.tsteps li:not(.done):not(.now) b{color:var(--mute);font-weight:400}
+.tsteps span{display:block;color:var(--slate);font-size:13.5px;margin-top:3px}
+.trec{margin-top:22px;padding-top:18px;border-top:1px solid var(--line);font-size:13.5px;color:var(--slate)}
+
+.lb{position:fixed;inset:0;background:rgba(8,16,13,.94);z-index:120;display:none;place-items:center;padding:24px}
+.lb.open{display:grid}
+.lb img{max-width:min(92vw,900px);max-height:82vh;object-fit:contain}
+.lb .close{position:absolute;top:18px;right:22px;background:none;border:none;color:#EAF0EE;font-size:34px;line-height:1}
+.lb .nav{position:absolute;top:50%;transform:translateY(-50%);background:none;border:none;color:#EAF0EE;font-size:40px;padding:12px 18px;opacity:.7}
+.lb .nav:hover{opacity:1}
+.lb .prev{left:8px}.lb .next{right:8px}
+.lb .cnt{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);color:#93A6A1;font-size:13px;letter-spacing:.1em}
+
+.scrim{position:fixed;inset:0;background:rgba(8,16,13,.5);z-index:80;opacity:0;pointer-events:none;transition:opacity .25s}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(420px,100%);z-index:90;background:var(--frost);border-left:1px solid var(--line);transform:translateX(101%);transition:transform .32s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.drawer.open{transform:none}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:22px 26px;border-bottom:1px solid var(--line)}
+.dh h2{font-size:23px}
+.x{background:none;border:none;font-size:26px;line-height:1;color:var(--slate);padding:0 4px}
+.lines{flex:1;overflow-y:auto;padding:4px 26px}
+.line{display:flex;gap:16px;padding:20px 0;border-bottom:1px solid var(--line)}
+.mini{width:62px;height:78px;flex-shrink:0;overflow:hidden;background:var(--paper)}
+.mini img{width:100%;height:100%;object-fit:cover}
+.lb-body{flex:1;min-width:0}
+.lb-body h4{margin:0;font-size:14.5px;font-weight:600}
+.qty{display:flex;align-items:center;gap:12px;margin-top:9px}
+.qty button{width:27px;height:27px;border:1px solid var(--line);background:transparent;border-radius:50%;line-height:1;font-size:14px}
+.qty button:hover{border-color:var(--jade);color:var(--jade)}
+.qty span{font-size:14px;font-variant-numeric:tabular-nums;min-width:14px;text-align:center}
+.lp{font-size:14.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.empty{text-align:center;color:var(--mute);padding:60px 0;font-size:15px}
+.df{padding:22px 26px;border-top:1px solid var(--line);background:var(--paper)}
+.total{display:flex;justify-content:space-between;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.ship{font-size:12.5px;color:var(--slate);margin:9px 0 0}
+.fb{height:3px;background:var(--line);border-radius:2px;margin:10px 0 18px;overflow:hidden}
+.fb i{display:block;height:100%;background:var(--jade);width:0;transition:width .4s}
+.pay{width:100%;background:var(--jade);color:#04120C;border:none;border-radius:999px;padding:16px;font-size:15px;font-weight:700;transition:filter .2s}
+.pay:hover:not(:disabled){filter:brightness(1.1)}
+.pay:disabled{opacity:.5;cursor:not-allowed}
+.secure{text-align:center;font-size:11.5px;color:var(--mute);margin:12px 0 0}
+.err{color:#B4483C;font-size:13.5px;margin-top:12px;text-align:center}
+.err:empty{display:none}
+.toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,150%);background:var(--jade);color:#04120C;padding:15px 28px;border-radius:999px;font-size:14.5px;font-weight:600;z-index:100;transition:transform .35s cubic-bezier(.4,0,.2,1);box-shadow:0 14px 40px -14px var(--shadow);max-width:calc(100% - 32px);text-align:center}
+.toast.show{transform:translate(-50%,0)}
+
+footer{background:var(--deep);color:var(--on-deep-mute);padding:clamp(50px,6vw,76px) 0 42px;font-size:13.5px}
+.foot{display:grid;grid-template-columns:1.6fr 1fr 1fr;gap:44px;margin-bottom:42px}
+.foot h4{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--on-deep);margin:0 0 14px;font-weight:600}
+.foot ul{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+.foot a{text-decoration:none}
+.foot a:hover{color:var(--jade)}
+.legal{border-top:1px solid var(--line-deep);padding-top:22px;font-size:12px}
+.legal p{margin:0 0 10px;max-width:104ch}
+.todo{color:var(--quartz);font-weight:700}
+:focus-visible{outline:2px solid var(--jade);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+@media(max-width:1000px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .card.big{grid-column:span 2;grid-template-columns:1fr}
+  .card.big .gal .main{aspect-ratio:16/10;min-height:0;height:auto}
+  .strip{grid-template-columns:repeat(2,1fr)}
+  .strip div:nth-child(3){border-left:none}
+  .strip div:nth-child(n+3){border-top:1px solid var(--line)}
+}
+@media(max-width:860px){
+  .hero-in{grid-template-columns:1fr;min-height:0}
+  .hero-media{height:60vw;max-height:420px;order:-1}
+  .hero-media::after{background:linear-gradient(0deg,var(--deep) 2%,rgba(14,25,23,0) 58%)}
+  .hero-copy{padding:14px clamp(18px,4vw,42px) 42px}
+  .head{flex-direction:column;align-items:flex-start;gap:12px}
+  .three{grid-template-columns:1fr;gap:24px}
+  .foot{grid-template-columns:1fr 1fr}
+  nav{display:none}
+}
+@media(max-width:600px){
+  .grid{grid-template-columns:1fr}
+  .card.big{grid-column:auto}
+  .strip{grid-template-columns:1fr}
+  .strip div+div{border-left:none;border-top:1px solid var(--line)}
+}
+</style>
+<script>window.__CARZA_PRODUCTS__=[{"slug": "rituel-visage", "cat": "visage", "kit": true, "name": "Le Rituel Visage", "tagline": "Coffret 3 pièces — un seul colis", "price": 6990, "compare": 9770, "desc": "Gua sha en jade, rouleau de jade et ice roller, réunis dans un coffret. Les trois arrivent ensemble, dans la même boîte — pas trois sachets étalés sur deux semaines.", "specs": [["Contenu", "Gua sha, rouleau de jade, ice roller"], ["Expédition", "Un seul colis"], ["Pierres", "Jade naturel taillé"], ["Livraison", "5 à 12 jours ouvrés"]], "imgs": ["1600428877878-1a0fd85beda8", "1600428853876-fb5a850b444f", "1603274737277-ec736f1696e5", "1643379855211-45b5a4ef44c4"]}, {"slug": "gua-sha-jade", "cat": "visage", "kit": false, "name": "Gua Sha en Jade", "tagline": "Le geste qui sculpte", "price": 2990, "compare": 3990, "desc": "", "specs": [], "imgs": ["1643379855211-45b5a4ef44c4", "1643379855889-850035817d24", "1643379855122-3d3162b56a99", "1600428853876-fb5a850b444f"]}, {"slug": "rouleau-jade", "cat": "visage", "kit": false, "name": "Rouleau de Jade", "tagline": "Le drainage du matin", "price": 3290, "compare": 4290, "desc": "", "specs": [], "imgs": ["1619745445488-9c9cc94a4b14", "1603274737277-f43f54446c7b", "1603274737277-ec736f1696e5", "1592136957897-b2b6ca21e10d"]}, {"slug": "quartz-rose", "cat": "visage", "kit": false, "name": "Rouleau de Quartz Rose", "tagline": "Pour les peaux réactives", "price": 3290, "compare": 4290, "desc": "", "specs": [], "imgs": ["1626897844948-b161ca15d44e", "1626897844962-a0ef7a37c7a0", "1626897844977-5d2139c222b6", "1690527279677-73eae4cf4c95"]}, {"slug": "ice-roller", "cat": "visage", "kit": false, "name": "Ice Roller", "tagline": "Le réveil après une nuit courte", "price": 3490, "compare": 4490, "desc": "", "specs": [], "imgs": ["1578747763484-51b21a33e4fa", "1714176774596-45946a7325fd", "1564512480295-86e479d9b87c", "1592136957897-b2b6ca21e10d"]}, {"slug": "rituel-nuit", "cat": "cheveux", "kit": true, "name": "Le Rituel Nuit", "tagline": "Coffret satin 4 pièces — un seul colis", "price": 6490, "compare": 8370, "desc": "Bonnet, taie d'oreiller, chouchou et masque, tous en satin. Le coton absorbe l'hydratation des cheveux et crée des frottements ; le satin laisse glisser. C'est le geste le plus simple contre la casse et les frisottis du matin.", "specs": [["Contenu", "Bonnet, taie, chouchou, masque"], ["Expédition", "Un seul colis"], ["Matière", "Satin, toucher soie"], ["Cheveux", "Longs, bouclés, colorés, tous types"]], "imgs": ["1687435703153-88f6bc0cdcff", "1629949008790-ca50382f7f98", "1606603049694-941214e2ac34", "1613503350178-0854b98bdbe8"]}, {"slug": "taie-satin", "cat": "cheveux", "kit": false, "name": "Taie d'oreiller Satin", "tagline": "Contre la casse et les plis du visage", "price": 2990, "compare": 3990, "desc": "", "specs": [], "imgs": ["1629949008790-ca50382f7f98", "1606603050877-ea3753dad136", "1606259457945-67dc66271ee6", "1709977353585-4ef213d416da"]}, {"slug": "brosse-brushing", "cat": "cheveux", "kit": false, "name": "Brosse Brushing", "tagline": "Volume à la racine", "price": 2490, "compare": 3290, "desc": "", "specs": [], "imgs": ["1734111719430-fe4a3973f8af", "1703353288357-c7efb9e6573a", "1527799820374-dcf8d9d4a388", "1595475884562-073c30d45670"]}, {"slug": "rituel-barbe", "cat": "barbe", "kit": true, "name": "Le Rituel Barbe", "tagline": "Coffret 4 pièces — un seul colis", "price": 5490, "compare": 7470, "desc": "Peigne en bois, brosse à poils naturels, ciseaux de précision et pochette qui se roule. Des outils uniquement : ni huile ni baume, donc rien à déclarer et rien qui se périme.", "specs": [["Contenu", "Peigne, brosse, ciseaux, pochette"], ["Expédition", "Un seul colis"], ["Sans", "Huile ni baume — outils seuls"], ["Ciseaux", "Inox, lames de précision"]], "imgs": ["1599011176306-4a96f1516d4d", "1503951914875-452162b0f3f1", "1635273051937-a0ddef9573b6", "1630827020718-3433092696e7"]}, {"slug": "peigne-ciseaux", "cat": "barbe", "kit": false, "name": "Peigne & Ciseaux", "tagline": "Le duo d'entretien", "price": 2790, "compare": 3690, "desc": "", "specs": [], "imgs": ["1599011176306-4a96f1516d4d", "1630827020718-3433092696e7", "1647140655214-e4a2d914971f", "1629189784191-9afdcbcb0398"]}];window.__CARZA_CHECKOUT__="https://bgvmwruynopmksshslzc.supabase.co/functions/v1/checkout";window.__CARZA_ANON__="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJndm13cnV5bm9wbWtzc2hzbHpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2MjI4OTMsImV4cCI6MjEwNDE5ODg5M30.Bni-6lQU-x7roL0MVCGUnBQKFZTNb4pMXp1B-rDo9oA";</script></head>
+<body>
+
+<div class="ticker" aria-hidden="true"><div class="tt" id="tt"></div></div>
+
+<header>
+  <div class="wrap bar">
+    <a href="#" class="logo">CARZA</a>
+    <nav>
+      <a href="#visage">Visage</a><a href="#cheveux">Nuit &amp; cheveux</a>
+      <a href="#barbe">Barbe</a><a href="#froid">Le froid</a><a href="#suivi">Suivi</a><a href="#faq">Questions</a>
+    </nav>
+    <button class="cart-btn" id="openCart">Panier <span class="count" id="count" hidden>0</span></button>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="hero-in">
+      <div class="hero-copy">
+        <p class="label" style="color:#9FC3C0">Pierre froide — visage, cheveux, barbe</p>
+        <h1>Le froid fait<br>le travail.<br><i>Vous, trois minutes.</i></h1>
+        <p>Une pierre à 4 °C resserre les vaisseaux, chasse l'eau des paupières et raffermit l'ovale. Ce n'est pas une croyance, c'est de la vasoconstriction. Nos outils sont taillés dans la pierre, jamais moulés en résine — la résine ne tient pas le froid.</p>
+        <div class="hero-cta">
+          <a href="#visage" class="btn">Voir les rituels</a>
+          <a href="#froid" class="btn btn-line">Pourquoi le froid</a>
+        </div>
+      </div>
+      <div class="hero-media">
+        <img src="https://images.unsplash.com/photo-1775642548888-7183ff686cb6?w=1500&h=1500&fit=crop&q=82&auto=format" alt="Rouleau de jade passé sur la pommette">
+      </div>
+    </div>
+  </div>
+
+  <div class="strip">
+    <div><b>Livraison offerte</b> dès 49 €</div>
+    <div><b>Coffrets</b> expédiés en un seul colis</div>
+    <div><b>14 jours</b> pour changer d'avis</div>
+    <div><b>Paiement Stripe</b> carte, Apple Pay</div>
+  </div>
+
+  <section id="visage" class="wrap">
+    <div class="head">
+      <div><p class="label">Rituel visage</p><h2>Le froid, dans<br>le bon ordre.</h2></div>
+      <p>Réveiller au froid sec, drainer au rouleau, sculpter au gua sha. Trois gestes, trois minutes.</p>
+    </div>
+    <div class="grid" data-cat="visage"></div>
+  </section>
+
+  <section id="cheveux" class="wrap" style="padding-top:0">
+    <div class="head">
+      <div><p class="label">Rituel nuit</p><h2>Ce qui se joue<br>pendant la nuit.</h2></div>
+      <p>Huit heures de frottement sur du coton défont ce que vous avez fait le matin. Le satin laisse glisser.</p>
+    </div>
+    <div class="grid" data-cat="cheveux"></div>
+  </section>
+
+  <section id="barbe" class="wrap" style="padding-top:0">
+    <div class="head">
+      <div><p class="label">Rituel barbe</p><h2>Entretenir,<br>sans le barbier.</h2></div>
+      <p>Peigne en bois, brosse à poils naturels, ciseaux de précision. De quoi tenir entre deux coupes.</p>
+    </div>
+    <div class="grid" data-cat="barbe"></div>
+  </section>
+
+  <section class="cold" id="froid">
+    <div class="wrap">
+      <p class="label">Ce qui se passe sur la peau</p>
+      <h2>Trois effets, une seule cause : la température.</h2>
+      <p>Le froid n'hydrate pas et ne remplace aucun soin. Il agit sur la circulation — et c'est exactement ce qui fait dégonfler un visage au réveil.</p>
+      <div class="three">
+        <div><div class="deg">4 °C</div><h3>Les vaisseaux se resserrent</h3><p>La vasoconstriction chasse le sang des capillaires de surface. Les rougeurs s'atténuent et la peau paraît plus nette en quelques passages.</p></div>
+        <div><div class="deg">↓</div><h3>La lymphe repart</h3><p>Le mouvement du centre vers les oreilles pousse le liquide vers les ganglions. C'est ce drainage qui dégonfle les paupières, pas la pierre.</p></div>
+        <div><div class="deg">×2</div><h3>Le sérum pénètre mieux</h3><p>Une peau massée absorbe davantage. Passez le rouleau juste après votre sérum, jamais sur peau sèche : la pierre a besoin de glisser.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="track" id="suivi">
+    <div class="wrap track-grid">
+      <div>
+        <p class="label">Suivi de commande</p>
+        <h2 style="font-size:clamp(30px,3.8vw,44px);margin-top:10px">Où en est<br>votre colis ?</h2>
+        <p style="color:var(--slate);font-size:14.5px;margin:14px 0 0;max-width:40ch">Votre numéro de commande figure dans l'email de confirmation, juste après le mot « commande ».</p>
+        <form class="tform" id="tform">
+          <input id="tnum" type="text" inputmode="numeric" placeholder="Numéro de commande" autocomplete="off" required>
+          <input id="tmail" type="email" placeholder="Email utilisé lors de l'achat" autocomplete="email" required>
+          <button type="submit" id="tbtn">Suivre ma commande</button>
+          <p class="tmsg" id="tmsg"></p>
+        </form>
+      </div>
+      <div class="tres" id="tres">
+        <p class="label">Commande n° <span id="tno"></span></p>
+        <h3 id="ttitle"></h3>
+        <ul class="tsteps" id="tsteps"></ul>
+        <div class="trec" id="trec"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" id="faq">
+    <div class="head"><div><p class="label">Avant de commander</p><h2>Questions fréquentes</h2></div></div>
+    <div style="max-width:860px">
+      <details open><summary>Au bout de combien de temps voit-on quelque chose ?</summary><p>L'effet dégonflant est immédiat, dès la première utilisation — c'est du drainage, pas un miracle. Pour l'ovale du visage, comptez trois à quatre semaines de pratique quotidienne.</p></details>
+      <details><summary>Quels sont les délais de livraison ?</summary><p>Entre 5 et 12 jours ouvrés. Nos pierres partent de notre atelier partenaire, ce qui allonge le délai mais permet de tenir ces prix. Numéro de suivi envoyé dès l'expédition.</p></details>
+      <details><summary>Jade ou quartz rose ?</summary><p>Le jade est plus dur et tient le froid plus longtemps : le meilleur choix pour le drainage, sur peau normale à mixte. Le quartz rose glisse davantage et chauffe plus vite — préférez-le si votre peau est réactive.</p></details>
+      <details><summary>Le satin, ça change vraiment quelque chose ?</summary><p>Le coton absorbe l'hydratation de la fibre et accroche à chaque mouvement de tête. Le satin a un coefficient de frottement bien plus faible : moins de casse, moins de frisottis au réveil, et pas de plis marqués sur le visage.</p></details>
+      <details><summary>Les coffrets arrivent-ils en une seule fois ?</summary><p>Oui. Chaque coffret est une référence unique chez notre fournisseur : les pièces sont déjà réunies dans la même boîte avant l'expédition. Vous recevez un colis, avec un seul numéro de suivi.</p></details>
+      <details><summary>Comment entretenir les pierres ?</summary><p>Eau tiède et savon doux après chaque usage, séchage à plat. Jamais au lave-vaisselle ni à l'eau bouillante : le choc thermique fend la pierre. Seul l'ice roller va au congélateur.</p></details>
+      <details><summary>Puis-je retourner un produit ?</summary><p>Oui, quatorze jours à compter de la réception, sans justification, conformément au droit de rétractation. Frais de retour à votre charge, remboursement sous quatorze jours après réception.</p></details>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <div class="logo" style="font-size:23px;display:inline-block;margin-bottom:14px;color:var(--on-deep)">CARZA</div>
+        <p style="margin:0;max-width:32ch">Des outils de pierre et de soin, choisis pour leur tenue et leur froid. Rien d'autre.</p>
+      </div>
+      <div><h4>Boutique</h4><ul><li><a href="#visage">Visage</a></li><li><a href="#cheveux">Nuit &amp; cheveux</a></li><li><a href="#barbe">Barbe</a></li></ul></div>
+      <div><h4>Informations</h4><ul><li><a href="#suivi">Suivre ma commande</a></li><li><a href="#faq">Livraison et retours</a></li><li><a href="#mentions">Mentions légales</a></li><li><a href="#mentions">Conditions générales</a></li></ul></div>
+    </div>
+    <div class="legal" id="mentions">
+      <p><strong>Mentions légales —</strong> Carza, <span class="todo">[forme juridique]</span>, <span class="todo">[adresse du siège]</span>. SIREN <span class="todo">[à compléter]</span>. Directeur de la publication : <span class="todo">[votre nom]</span>. Contact : <span class="todo">[email]</span>.</p>
+      <p>Paiement sécurisé par Stripe — aucune donnée bancaire ne transite par ce site. Droit de rétractation de 14 jours (art. L221-18 du Code de la consommation). Garantie légale de conformité de 2 ans. Photographies : Unsplash.</p>
+      <p class="todo">À compléter avant la première vente : immatriculation, adresse, email de contact et CGV complètes.</p>
+    </div>
+  </div>
+</footer>
+
+<div class="lb" id="lb">
+  <button class="close" id="lbClose" aria-label="Fermer">&times;</button>
+  <button class="nav prev" id="lbPrev" aria-label="Précédent">‹</button>
+  <img id="lbImg" alt="">
+  <button class="nav next" id="lbNext" aria-label="Suivant">›</button>
+  <div class="cnt" id="lbCnt"></div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-label="Panier">
+  <div class="dh"><h2>Votre panier</h2><button class="x" id="closeCart" aria-label="Fermer">&times;</button></div>
+  <div class="lines" id="lines"></div>
+  <div class="df" id="foot" hidden>
+    <div class="total"><span>Sous-total</span><span id="subtotal">0,00 €</span></div>
+    <p class="ship" id="shipNote"></p>
+    <div class="fb"><i id="fbar"></i></div>
+    <button class="pay" id="pay">Passer au paiement</button>
+    <p class="secure">Stripe · Carte, Apple Pay, Google Pay</p>
+    <p class="err" id="err"></p>
+  </div>
+</aside>
+<div class="toast" id="toast"></div>
+
+<script>
+const PRODUCTS = window.__CARZA_PRODUCTS__ || [];
+const CHECKOUT_URL = window.__CARZA_CHECKOUT__ || "";
+const ANON = window.__CARZA_ANON__ || "";
+const FREE_FROM = 4900;
+const IMG = (id,w) => `https://images.unsplash.com/photo-${id}?w=${w}&h=${Math.round(w*1.25)}&fit=crop&q=80&auto=format`;
+const euro = c => (c/100).toFixed(2).replace(".",",") + " €";
+
+document.getElementById("tt").innerHTML =
+  [..."Livraison offerte dès 49 €|Jade et quartz naturels|14 jours pour changer d'avis|Le rituel tient en 3 minutes".split("|")].concat(
+   "Livraison offerte dès 49 €|Jade et quartz naturels|14 jours pour changer d'avis|Le rituel tient en 3 minutes".split("|"),
+   "Livraison offerte dès 49 €|Jade et quartz naturels|14 jours pour changer d'avis|Le rituel tient en 3 minutes".split("|"))
+  .map(t => "<span>"+t+"</span>").join("");
+
+/* ---------- Cartes produit avec galerie ---------- */
+function buildCard(p){
+  const el = document.createElement("article");
+  el.className = "card" + (p.kit ? " big" : "");
+  const savings = p.compare ? Math.round((1 - p.price/p.compare)*100) : 0;
+  el.innerHTML =
+    '<div class="gal">' +
+      '<div class="main">' + (p.kit ? '<span class="flag">Le rituel complet</span>' : '') +
+        '<img alt="" loading="lazy">' +
+      '</div>' +
+      '<div class="thumbs"></div>' +
+    '</div>' +
+    '<div class="body">' +
+      '<h3></h3><p class="tag"></p>' +
+      (p.kit ? '<p class="desc"></p><dl class="specs"></dl>' : '') +
+      '<div class="prices"><span class="price"></span><span class="was"></span>' +
+        (savings > 0 ? '<span class="save">−' + savings + ' %</span>' : '') + '</div>' +
+      '<button class="add"></button>' +
+    '</div>';
+
+  const main = el.querySelector(".main img");
+  const thumbs = el.querySelector(".thumbs");
+  main.src = IMG(p.imgs[0], p.kit ? 1100 : 700);
+  main.alt = p.name;
+
+  p.imgs.forEach((id, i) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = i === 0 ? "on" : "";
+    b.setAttribute("aria-label", "Photo " + (i+1) + " sur " + p.imgs.length);
+    b.innerHTML = '<img alt="" loading="lazy">';
+    b.querySelector("img").src = IMG(id, 200);
+    b.addEventListener("click", () => {
+      main.src = IMG(id, p.kit ? 1100 : 700);
+      thumbs.querySelectorAll("button").forEach(x => x.classList.remove("on"));
+      b.classList.add("on");
+      el.dataset.idx = i;
+    });
+    thumbs.appendChild(b);
+  });
+
+  el.querySelector(".main").addEventListener("click", () =>
+    openLightbox(p, Number(el.dataset.idx || 0)));
+
+  el.querySelector("h3").textContent = p.name;
+  el.querySelector(".tag").textContent = p.tagline;
+  if (p.kit){
+    el.querySelector(".desc").textContent = p.desc;
+    const dl = el.querySelector(".specs");
+    p.specs.forEach(([k,v]) => {
+      const row = document.createElement("div");
+      row.innerHTML = "<dt></dt><dd></dd>";
+      row.querySelector("dt").textContent = k;
+      row.querySelector("dd").textContent = v;
+      dl.appendChild(row);
+    });
+  }
+  el.querySelector(".price").textContent = euro(p.price);
+  const was = el.querySelector(".was");
+  if (p.compare) was.textContent = euro(p.compare); else was.remove();
+
+  const btn = el.querySelector(".add");
+  btn.textContent = "Ajouter — " + euro(p.price);
+  btn.addEventListener("click", e => {
+    e.stopPropagation();
+    add(p.slug);
+    btn.textContent = "Ajouté au panier"; btn.classList.add("done");
+    setTimeout(() => { btn.textContent = "Ajouter — " + euro(p.price); btn.classList.remove("done"); }, 1500);
+  });
+  return el;
+}
+
+["visage","cheveux","barbe"].forEach(cat => {
+  const box = document.querySelector('.grid[data-cat="'+cat+'"]');
+  PRODUCTS.filter(p => p.cat === cat)
+          .sort((a,b) => (b.kit?1:0) - (a.kit?1:0))
+          .forEach(p => box.appendChild(buildCard(p)));
+});
+
+/* ---------- Lightbox ---------- */
+const lb = document.getElementById("lb"), lbImg = document.getElementById("lbImg"), lbCnt = document.getElementById("lbCnt");
+let lbSet = [], lbI = 0;
+function openLightbox(p, i){ lbSet = p.imgs; lbI = i; paintLb(); lb.classList.add("open"); }
+function paintLb(){ lbImg.src = IMG(lbSet[lbI], 1400); lbCnt.textContent = (lbI+1) + " / " + lbSet.length; }
+function step(d){ lbI = (lbI + d + lbSet.length) % lbSet.length; paintLb(); }
+document.getElementById("lbClose").addEventListener("click", () => lb.classList.remove("open"));
+document.getElementById("lbPrev").addEventListener("click", e => { e.stopPropagation(); step(-1); });
+document.getElementById("lbNext").addEventListener("click", e => { e.stopPropagation(); step(1); });
+lb.addEventListener("click", e => { if (e.target === lb) lb.classList.remove("open"); });
+document.addEventListener("keydown", e => {
+  if (!lb.classList.contains("open")) return;
+  if (e.key === "Escape") lb.classList.remove("open");
+  if (e.key === "ArrowLeft") step(-1);
+  if (e.key === "ArrowRight") step(1);
+});
+
+/* ---------- Panier ---------- */
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem("carza_cart") || "[]"); } catch { cart = []; }
+const save = () => { try { localStorage.setItem("carza_cart", JSON.stringify(cart)); } catch {} };
+function add(slug){
+  const l = cart.find(x => x.slug === slug);
+  if (l) l.quantity = Math.min(l.quantity + 1, 10); else cart.push({ slug, quantity: 1 });
+  save(); render(); openCart();
+}
+function setQty(slug, d){
+  const l = cart.find(x => x.slug === slug);
+  if (!l) return;
+  l.quantity += d;
+  if (l.quantity < 1) cart = cart.filter(x => x.slug !== slug);
+  save(); render();
+}
+const lines = document.getElementById("lines"), foot = document.getElementById("foot"), countEl = document.getElementById("count");
+function render(){
+  const n = cart.reduce((s,l) => s + l.quantity, 0);
+  countEl.textContent = n; countEl.hidden = n === 0;
+  lines.innerHTML = "";
+  if (!cart.length){ lines.innerHTML = '<p class="empty">Votre panier est vide.</p>'; foot.hidden = true; return; }
+  let sub = 0;
+  cart.forEach(l => {
+    const p = PRODUCTS.find(x => x.slug === l.slug);
+    if (!p) return;
+    sub += p.price * l.quantity;
+    const row = document.createElement("div");
+    row.className = "line";
+    row.innerHTML = '<div class="mini"><img alt="" loading="lazy"></div>' +
+      '<div class="lb-body"><h4></h4><div class="qty">' +
+      '<button data-d="-1" aria-label="Retirer un">−</button><span></span>' +
+      '<button data-d="1" aria-label="Ajouter un">+</button></div></div><div class="lp"></div>';
+    row.querySelector("img").src = IMG(p.imgs[0], 140);
+    row.querySelector("h4").textContent = p.name;
+    row.querySelector(".qty span").textContent = l.quantity;
+    row.querySelector(".lp").textContent = euro(p.price * l.quantity);
+    row.querySelectorAll(".qty button").forEach(b =>
+      b.addEventListener("click", () => setQty(l.slug, Number(b.dataset.d))));
+    lines.appendChild(row);
+  });
+  foot.hidden = false;
+  document.getElementById("subtotal").textContent = euro(sub);
+  document.getElementById("shipNote").textContent = sub >= FREE_FROM
+    ? "Livraison offerte." : "Plus que " + euro(FREE_FROM - sub) + " pour la livraison offerte.";
+  document.getElementById("fbar").style.width = Math.min(100, sub / FREE_FROM * 100) + "%";
+}
+const scrim = document.getElementById("scrim"), drawer = document.getElementById("drawer");
+const openCart = () => { scrim.classList.add("open"); drawer.classList.add("open"); };
+const closeCart = () => { scrim.classList.remove("open"); drawer.classList.remove("open"); };
+document.getElementById("openCart").addEventListener("click", openCart);
+document.getElementById("closeCart").addEventListener("click", closeCart);
+scrim.addEventListener("click", closeCart);
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !lb.classList.contains("open")) closeCart(); });
+
+const payBtn = document.getElementById("pay"), errEl = document.getElementById("err");
+payBtn.addEventListener("click", async () => {
+  errEl.textContent = ""; payBtn.disabled = true; payBtn.textContent = "Ouverture du paiement…";
+  try {
+    const res = await fetch(CHECKOUT_URL, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
+      body: JSON.stringify({ items: cart })
+    });
+    const data = await res.json();
+    if (data.url){ window.location.href = data.url; return; }
+    errEl.textContent = data.error || "Le paiement n'a pas pu être ouvert.";
+  } catch { errEl.textContent = "Connexion impossible. Vérifiez votre réseau et réessayez."; }
+  payBtn.disabled = false; payBtn.textContent = "Passer au paiement";
+});
+
+const toast = document.getElementById("toast"), params = new URLSearchParams(location.search);
+if (params.get("commande") === "ok"){
+  cart = []; save();
+  toast.textContent = "Commande confirmée. Un email arrive.";
+  toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 6000);
+  history.replaceState({}, "", location.pathname);
+} else if (params.get("commande") === "annulee"){
+  toast.textContent = "Paiement annulé — votre panier est intact.";
+  toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 4500);
+  history.replaceState({}, "", location.pathname);
+}
+render();
+
+/* ---------- Suivi de commande ---------- */
+const TRACK_URL = CHECKOUT_URL.replace("/checkout", "/suivi");
+const LABELS = [
+  ["Commande confirmée", "Nous avons bien reçu votre paiement."],
+  ["En préparation", "Votre commande est en cours de préparation."],
+  ["Expédiée", "Votre colis a quitté l'entrepôt."],
+  ["Livrée", "Votre colis a été remis."]
+];
+const tform = document.getElementById("tform"), tmsg = document.getElementById("tmsg"),
+      tres = document.getElementById("tres"), tbtn = document.getElementById("tbtn");
+
+tform.addEventListener("submit", async e => {
+  e.preventDefault();
+  tmsg.textContent = ""; tbtn.disabled = true; tbtn.textContent = "Recherche…";
+  try {
+    const res = await fetch(TRACK_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + ANON, "apikey": ANON },
+      body: JSON.stringify({ order: document.getElementById("tnum").value, email: document.getElementById("tmail").value })
+    });
+    const d = await res.json();
+    if (d.error){ tmsg.textContent = d.error; tres.classList.remove("on"); }
+    else paintTrack(d);
+  } catch {
+    tmsg.textContent = "Connexion impossible. Réessayez dans un instant.";
+  }
+  tbtn.disabled = false; tbtn.textContent = "Suivre ma commande";
+});
+
+function paintTrack(d){
+  document.getElementById("tno").textContent = d.order_number;
+  const cancelled = d.status === "annulee" || d.status === "remboursee";
+  document.getElementById("ttitle").textContent = cancelled
+    ? (d.status === "remboursee" ? "Commande remboursée" : "Commande annulée")
+    : LABELS[d.step][0];
+
+  const ul = document.getElementById("tsteps");
+  ul.innerHTML = "";
+  if (!cancelled){
+    LABELS.forEach(([t, sub], i) => {
+      const li = document.createElement("li");
+      li.className = i < d.step ? "done" : i === d.step ? "now" : "";
+      li.innerHTML = '<span class="dot">' + (i < d.step ? "✓" : i + 1) + '</span><div><b></b><span></span></div>';
+      li.querySelector("b").textContent = t;
+      li.querySelector("div span").textContent = sub;
+      ul.appendChild(li);
+    });
+  }
+
+  const rec = document.getElementById("trec");
+  const lignes = d.items.map(i => i.quantity + " × " + i.name).join(", ");
+  let html = lignes ? "<div>" + lignes + "</div>" : "";
+  if (d.window) html += '<div style="margin-top:8px">Livraison estimée entre le <strong>' + d.window + "</strong>" + (d.city ? " à " + d.city : "") + ".</div>";
+  if (d.tracking){
+    const n = '<strong>' + d.tracking + '</strong>';
+    html += '<div style="margin-top:8px">Numéro de suivi : ' +
+      (d.tracking_url ? '<a href="' + d.tracking_url + '" target="_blank" rel="noopener">' + n + '</a>' : n) + "</div>";
+  }
+  rec.innerHTML = html;
+  tres.classList.add("on");
+}
+</script>
+</body>
+</html>
