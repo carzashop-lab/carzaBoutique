@@ -299,6 +299,18 @@ footer{background:var(--deep);color:var(--on-deep-mute);padding:clamp(50px,6vw,7
   .body{padding:18px 16px 20px}
   .prices{gap:8px}
 }
+
+/* --- Bandeau de consentement (RGPD) --- */
+#cnst{position:fixed;left:0;right:0;bottom:0;z-index:120;background:var(--deep);color:var(--on-deep);
+  border-top:1px solid var(--line-deep);padding:18px clamp(16px,4vw,40px);display:none}
+#cnst.on{display:block}
+#cnst .in{max-width:1100px;margin:0 auto;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+#cnst p{margin:0;font-size:13.5px;line-height:1.5;color:var(--on-deep-mute);flex:1;min-width:260px}
+#cnst .b{display:flex;gap:10px;flex-wrap:wrap}
+#cnst button{border-radius:999px;padding:11px 20px;font-size:13.5px;font-weight:600;border:1px solid var(--line-deep);
+  background:transparent;color:var(--on-deep)}
+#cnst button.ok{background:var(--jade);border-color:var(--jade);color:#04120C}
+@media(max-width:600px){#cnst .b{width:100%}#cnst .b button{flex:1}}
 </style>
 
 <script>
@@ -744,6 +756,55 @@ window.__CARZA_ANON__ = "";   // plus de cle : les fonctions sont sur le meme do
  ]
 }
 </script>
+<script>
+/* ---------------------------------------------------------------
+   Pixel Meta — chargé UNIQUEMENT après consentement (CNIL / RGPD).
+   Aucun cookie publicitaire n'est déposé tant que le visiteur
+   n'a pas cliqué « Accepter ».
+   --------------------------------------------------------------- */
+window.__PIXEL_ID__ = "941484528391340";
+(function(){
+  var CLE = "carza_consent", charge = false;
+
+  function chargerPixel(){
+    if (charge || window.fbq) return;
+    charge = true;
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,
+    'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', window.__PIXEL_ID__);
+    fbq('track', 'PageView');
+  }
+
+  /* Appelée partout dans le site : ne fait rien sans consentement. */
+  window.fbTrack = function(nom, params, id){
+    if (!window.fbq) return;
+    try { id ? fbq('track', nom, params || {}, {eventID: id}) : fbq('track', nom, params || {}); }
+    catch(e){}
+  };
+
+  function lire(){ try { return localStorage.getItem(CLE); } catch(e){ return null; } }
+  function ecrire(v){ try { localStorage.setItem(CLE, v); } catch(e){} }
+
+  if (lire() === "oui") chargerPixel();
+
+  document.addEventListener("DOMContentLoaded", function(){
+    if (lire()) return;                       // choix deja fait
+    var d = document.createElement("div");
+    d.id = "cnst";
+    d.innerHTML = '<div class="in"><p>Nous utilisons des cookies de mesure d\'audience publicitaire ' +
+      'pour comprendre comment les visiteurs arrivent sur Carza. Rien n\'est déposé sans votre accord.</p>' +
+      '<div class="b"><button type="button" id="cnstNon">Refuser</button>' +
+      '<button type="button" class="ok" id="cnstOui">Accepter</button></div></div>';
+    document.body.appendChild(d);
+    requestAnimationFrame(function(){ d.classList.add("on"); });
+    d.querySelector("#cnstOui").onclick = function(){ ecrire("oui"); chargerPixel(); d.remove(); };
+    d.querySelector("#cnstNon").onclick = function(){ ecrire("non"); d.remove(); };
+  });
+})();
+</script>
 </head>
 <body>
 
@@ -985,8 +1046,16 @@ function buildCard(p){
     thumbs.appendChild(b);
   });
 
-  el.querySelector(".main").addEventListener("click", () =>
-    openLightbox(p, Number(el.dataset.idx || 0)));
+  el.querySelector(".main").addEventListener("click", () => {
+    window.fbTrack && fbTrack("ViewContent", {
+      content_type: "product",
+      content_ids: [p.slug + (variant ? "-" + variant.id : "")],
+      content_name: p.name,
+      value: (p.price + (variant && variant.plus ? variant.plus : 0)) / 100,
+      currency: "EUR"
+    });
+    openLightbox(p, Number(el.dataset.idx || 0));
+  });
 
   el.querySelector("h3").textContent = p.name;
   el.querySelector(".tag").textContent = p.tagline;
@@ -1096,12 +1165,29 @@ let cart = [];
 try { cart = JSON.parse(localStorage.getItem("carza_cart") || "[]"); } catch { cart = []; }
 const save = () => { try { localStorage.setItem("carza_cart", JSON.stringify(cart)); } catch {} };
 const keyOf = l => l.slug + "|" + (l.variant || "");
+/* Valeur du panier, pour les evenements publicitaires */
+function ligneUnite(l){
+  const p = PRODUCTS.find(x => x.slug === l.slug); if (!p) return 0;
+  const v = (p.variants || []).find(x => x.id === l.variant);
+  return p.price + (v && v.plus ? v.plus : 0);
+}
+function panierTotal(){ return cart.reduce((s,l) => s + ligneUnite(l) * l.quantity, 0); }
+function panierIds(){ return cart.map(l => l.slug + (l.variant ? "-" + l.variant : "")); }
+
 function add(slug, variant){
   const vid = variant ? variant.id : "";
   const l = cart.find(x => x.slug === slug && (x.variant || "") === vid);
   if (l) l.quantity = Math.min(l.quantity + 1, 10);
   else cart.push({ slug, quantity: 1, variant: vid, variantLabel: variant ? variant.label : "" });
   save(); render(); openCart();
+  const pp = PRODUCTS.find(x => x.slug === slug);
+  if (pp) window.fbTrack && fbTrack("AddToCart", {
+    content_type: "product",
+    content_ids: [slug + (vid ? "-" + vid : "")],
+    content_name: pp.name + (variant ? " — " + variant.label : ""),
+    value: (pp.price + (variant && variant.plus ? variant.plus : 0)) / 100,
+    currency: "EUR"
+  });
 }
 function setQty(key, d){
   const l = cart.find(x => keyOf(x) === key);
@@ -1161,6 +1247,13 @@ document.addEventListener("keydown", e => { if (e.key === "Escape" && !lb.classL
 const payBtn = document.getElementById("pay"), errEl = document.getElementById("err");
 payBtn.addEventListener("click", async () => {
   errEl.textContent = ""; payBtn.disabled = true; payBtn.textContent = "Ouverture du paiement…";
+  window.fbTrack && fbTrack("InitiateCheckout", {
+    content_type: "product",
+    content_ids: panierIds(),
+    num_items: cart.reduce((n,l) => n + l.quantity, 0),
+    value: panierTotal() / 100,
+    currency: "EUR"
+  });
   try {
     const res = await fetch(CHECKOUT_URL, {
       method:"POST",
@@ -1176,6 +1269,15 @@ payBtn.addEventListener("click", async () => {
 
 const toast = document.getElementById("toast"), params = new URLSearchParams(location.search);
 if (params.get("commande") === "ok"){
+  // La valeur est lue AVANT de vider le panier. L'eventID est l'identifiant
+  // de session Stripe : il evite les doublons si le client recharge la page.
+  window.fbTrack && fbTrack("Purchase", {
+    content_type: "product",
+    content_ids: panierIds(),
+    num_items: cart.reduce((n,l) => n + l.quantity, 0),
+    value: panierTotal() / 100,
+    currency: "EUR"
+  }, params.get("session") || undefined);
   cart = []; save();
   toast.textContent = "Commande confirmée. Un email arrive.";
   toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 6000);
