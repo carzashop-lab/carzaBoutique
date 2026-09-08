@@ -190,7 +190,7 @@ document.addEventListener("click", async (e) => {
   if (go){
     await copier(go.dataset.addr);
     go.textContent = "Adresse copiée ✓";
-    window.open(go.dataset.url, "_blank", "noopener");
+    window.open(go.dataset.url, "_blank", "noopener,noreferrer");
     setTimeout(() => { go.textContent = "Copier l'adresse & commander →"; }, 2500);
     return;
   }
