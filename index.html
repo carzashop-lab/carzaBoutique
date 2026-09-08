@@ -104,7 +104,8 @@ section{padding:clamp(60px,7vw,96px) 0}
 .head h2{font-size:clamp(32px,4.2vw,52px);line-height:1.02;margin-top:10px}
 .head>p{color:var(--slate);font-size:14.5px;max-width:38ch;margin:0 0 6px}
 
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(22px,2.6vw,36px)}
+.grid{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:clamp(22px,2.6vw,36px)}
+.grid.duo{grid-template-columns:repeat(2,minmax(0,420px));justify-content:center}
 .card{display:flex;flex-direction:column;background:var(--paper);border:1px solid var(--line);border-radius:2px;overflow:hidden}
 .card.big{grid-column:1/-1;display:grid;grid-template-columns:1.05fr .95fr;gap:0}
 .gal{position:relative;background:var(--frost);display:flex;flex-direction:column;flex:1;min-height:0}
@@ -140,12 +141,12 @@ section{padding:clamp(60px,7vw,96px) 0}
 .specs div{display:grid;grid-template-columns:auto 1fr;gap:16px;padding:9px 0;border-bottom:1px solid var(--line)}
 .specs dt{color:var(--mute);min-width:88px}
 .specs dd{margin:0;text-align:right;color:var(--slate)}
-.prices{display:flex;align-items:baseline;gap:11px;margin-top:16px;font-variant-numeric:tabular-nums}
+.prices{display:flex;align-items:baseline;gap:11px;margin-top:16px;font-variant-numeric:tabular-nums;flex-wrap:wrap}
 .card.big .prices{margin-top:22px}
-.price{font-size:20px;font-weight:700}
+.price{font-size:20px;font-weight:700;white-space:nowrap}
 .card.big .price{font-size:26px}
-.was{color:var(--mute);text-decoration:line-through;font-size:13.5px}
-.save{background:color-mix(in srgb,var(--quartz) 22%,transparent);color:var(--quartz);font-size:11px;font-weight:700;padding:3px 8px;border-radius:2px;letter-spacing:.04em}
+.was{color:var(--mute);text-decoration:line-through;font-size:13.5px;white-space:nowrap}
+.save{white-space:nowrap;background:color-mix(in srgb,var(--quartz) 22%,transparent);color:var(--quartz);font-size:11px;font-weight:700;padding:3px 8px;border-radius:2px;letter-spacing:.04em}
 .add{margin-top:14px;width:100%;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:13px;font-size:14px;font-weight:600;transition:.18s}
 .card.big .add{background:var(--jade);color:#04120C;border-color:var(--jade);max-width:340px;padding:16px}
 .add:hover{background:var(--ink);color:var(--frost);border-color:var(--ink)}
@@ -248,7 +249,7 @@ footer{background:var(--deep);color:var(--on-deep-mute);padding:clamp(50px,6vw,7
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 
 @media(max-width:1000px){
-  .grid{grid-template-columns:repeat(2,1fr)}
+  .grid,.grid.duo{grid-template-columns:repeat(2,1fr);justify-content:stretch}
   .card.big{grid-column:1/-1;grid-template-columns:1fr}
   .card.big .gal .main{aspect-ratio:16/10;min-height:0;height:auto}
   .strip{grid-template-columns:repeat(2,1fr)}
@@ -266,7 +267,7 @@ footer{background:var(--deep);color:var(--on-deep-mute);padding:clamp(50px,6vw,7
   nav{display:none}
 }
 @media(max-width:600px){
-  .grid{grid-template-columns:1fr}
+  .grid,.grid.duo{grid-template-columns:1fr;justify-content:stretch}
   .card.big{grid-column:auto}
   .strip{grid-template-columns:1fr}
   .strip div+div{border-left:none;border-top:1px solid var(--line)}
@@ -283,7 +284,21 @@ footer{background:var(--deep);color:var(--on-deep-mute);padding:clamp(50px,6vw,7
 .card:not(.big) .sw{width:auto;flex:1;min-width:0;padding:5px 3px 6px;border-radius:11px}
 .card:not(.big) .sw img{width:100%;height:auto;aspect-ratio:1;object-fit:cover}
 .card:not(.big) .sw span{font-size:9.5px}
+.sw span{width:100%;overflow-wrap:anywhere;hyphens:auto}
 .lv{font-size:12px;color:var(--mute);margin-top:2px}
+
+/* --- Mobile : on empile ce qui ne tient pas sur une ligne --- */
+@media(max-width:600px){
+  .specs div{grid-template-columns:1fr;gap:2px;padding:11px 0}
+  .specs dt{min-width:0}
+  .specs dd{text-align:left}
+  .card.big .body{padding:22px 18px 24px}
+  .card.big .add{max-width:none}
+  .card:not(.big) .swatches{flex-wrap:wrap;gap:7px}
+  .card:not(.big) .sw{flex:0 1 calc(33.333% - 5px)}
+  .body{padding:18px 16px 20px}
+  .prices{gap:8px}
+}
 </style>
 
 <script>
@@ -1045,8 +1060,10 @@ function buildCard(p){
   const n = PRODUCTS.filter(p => p.cat === cat && !p.kit).length;
   // 3 fiches : pleine largeur. 2 fiches : on borne la largeur pour ne pas
   // obtenir des cartes geantes, et on centre la rangee.
-  if (n === 2){ box.style.gridTemplateColumns = "repeat(2,minmax(0,420px))"; box.style.justifyContent = "center"; }
-  else { box.style.gridTemplateColumns = "repeat(" + Math.min(Math.max(n, 2), 3) + ",1fr)"; }
+  // On pose une variable CSS : les media queries peuvent la surcharger,
+  // ce qu'un style inline empechait (d'ou la grille a 2 colonnes sur mobile).
+  if (n === 2) box.classList.add("duo");
+  else box.style.setProperty("--cols", String(Math.min(Math.max(n, 2), 3)));
   PRODUCTS.filter(p => p.cat === cat)
           .sort((a,b) => (b.kit?1:0) - (a.kit?1:0))
           .forEach(p => box.appendChild(buildCard(p)));
