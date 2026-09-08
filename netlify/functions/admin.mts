@@ -56,18 +56,7 @@ export default async (req: Request, _ctx: Context) => {
   }
 
   const token = String(url.searchParams.get("token") ?? "");
-  if (!safeEqual(token, expected)) {
-    // Diagnostic sans jamais reveler les valeurs : seulement les longueurs et
-    // les premiers caracteres. A retirer une fois le jeton verifie.
-    const info = [
-      `recu : ${token.length} caracteres, commence par "${token.slice(0, 3)}"`,
-      `attendu : ${expected.length} caracteres, commence par "${expected.slice(0, 3)}"`,
-      expected !== expected.trim() ? "ATTENTION : espace avant ou apres dans ADMIN_TOKEN" : "",
-    ].filter(Boolean).join("\n");
-    return new Response("Jeton invalide\n\n" + info, {
-      status: 401, headers: { "Content-Type": "text/plain; charset=utf-8" },
-    });
-  }
+  if (!safeEqual(token, expected)) return new Response("Jeton invalide", { status: 401 });
 
   // --- Flux JSON, interroge toutes les 30 s par la page pour les notifications ---
   if (url.searchParams.get("json")) {
