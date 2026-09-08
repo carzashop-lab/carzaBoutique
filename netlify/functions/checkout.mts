@@ -1,5 +1,5 @@
-  import type { Context } from "@netlify/functions";
-import { neon } from "@netlify/neon";
+import type { Context } from "@netlify/functions";
+import { getDatabase } from "@netlify/database";
 import { variantOf, json } from "../lib/catalogue.mts";
 
 // Ouvre une session de paiement Stripe.
@@ -21,13 +21,14 @@ export default async (req: Request, _ctx: Context) => {
   }
   if (cart.length === 0) return json({ error: "Le panier est vide." }, 400);
 
-  const sql = neon();
-  const slugs = [...new Set(cart.map((i) => String(i.slug)))];
-  const products = await sql`
+  const sql = getDatabase().sql;
+  // Le catalogue tient en quelques lignes : on le lit en entier et on filtre
+  // en memoire. Plus simple et plus portable qu'un "where slug = any(...)".
+  const all = await sql`
     select slug, name, tagline, price_cents, image_url
-    from products
-    where active = true and slug = any(${slugs})
-  `;
+    from products where active = true`;
+  const slugs = new Set(cart.map((i) => String(i.slug)));
+  const products = (all as any[]).filter((p) => slugs.has(p.slug));
   if (!products.length) return json({ error: "Produit introuvable." }, 400);
 
   const site = (process.env.SITE_URL ?? process.env.URL ?? "").replace(/\/$/, "");

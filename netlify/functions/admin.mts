@@ -1,5 +1,5 @@
 import type { Context } from "@netlify/functions";
-import { neon } from "@netlify/neon";
+import { getDatabase } from "@netlify/database";
 import { eur, esc, json } from "../lib/catalogue.mts";
 
 // Tableau de bord des commandes, protege par un jeton.
@@ -36,7 +36,7 @@ export default async (req: Request, _ctx: Context) => {
   if (!expected) return new Response("ADMIN_TOKEN non configuré", { status: 500 });
 
   const url = new URL(req.url);
-  const sql = neon();
+  const sql = getDatabase().sql;
 
   // --- Mise a jour du statut / du suivi ---
   if (req.method === "POST") {

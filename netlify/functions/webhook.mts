@@ -1,5 +1,5 @@
 import type { Context } from "@netlify/functions";
-import { neon } from "@netlify/neon";
+import { getDatabase } from "@netlify/database";
 import {
   variantOf, eur, esc, addBusinessDays, frDate, sendMail,
 } from "../lib/catalogue.mts";
@@ -174,7 +174,7 @@ export default async (req: Request, _ctx: Context) => {
   if (event.type !== "checkout.session.completed") return new Response("ok", { status: 200 });
 
   const s = event.data.object;
-  const sql = neon();
+  const sql = getDatabase().sql;
 
   // Stripe peut renvoyer deux fois le meme evenement : on n'enregistre qu'une fois.
   const already = await sql`select id from orders where stripe_session_id = ${s.id} limit 1`;
@@ -186,11 +186,10 @@ export default async (req: Request, _ctx: Context) => {
   let cart: { slug: string; q: number; v?: string; vl?: string }[] = [];
   try { cart = JSON.parse(s.metadata?.cart ?? "[]"); } catch { /* panier vide */ }
 
-  const slugs = [...new Set(cart.map((c) => c.slug))];
-  const products = slugs.length
-    ? await sql`select id, slug, name, price_cents, cost_cents, supplier_url, supplier_sku
-                from products where slug = any(${slugs})`
-    : [];
+  const all = await sql`select id, slug, name, price_cents, cost_cents,
+                               supplier_url, supplier_sku from products`;
+  const slugs = new Set(cart.map((c) => c.slug));
+  const products = (all as any[]).filter((p) => slugs.has(p.slug));
 
   const cost = cart.reduce((sum, c) => {
     const p = products.find((x: any) => x.slug === c.slug);

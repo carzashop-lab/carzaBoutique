@@ -1,5 +1,5 @@
 import type { Context } from "@netlify/functions";
-import { neon } from "@netlify/neon";
+import { getDatabase } from "@netlify/database";
 import { json, addBusinessDays, frDate } from "../lib/catalogue.mts";
 
 // Page de suivi client.
@@ -21,7 +21,7 @@ export default async (req: Request, _ctx: Context) => {
     return json({ error: "Indiquez votre numéro de commande et l'email utilisé lors de l'achat." }, 400);
   }
 
-  const sql = neon();
+  const sql = getDatabase().sql;
 
   // Le numero seul ne suffit pas : l'email doit correspondre.
   const [order] = await sql`
