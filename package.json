@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "dependencies": {
+    "@netlify/database": "^2.0.1",
     "@netlify/neon": "^0.1.0"
   },
   "devDependencies": {
