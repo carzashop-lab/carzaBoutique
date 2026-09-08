@@ -378,8 +378,8 @@ window.__CARZA_PRODUCTS__ = [
 
 
 ];
-window.__CARZA_CHECKOUT__ = "https://bgvmwruynopmksshslzc.supabase.co/functions/v1/checkout";
-window.__CARZA_ANON__ = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJndm13cnV5bm9wbWtzc2hzbHpjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2MjI4OTMsImV4cCI6MjEwNDE5ODg5M30.Bni-6lQU-x7roL0MVCGUnBQKFZTNb4pMXp1B-rDo9oA";
+window.__CARZA_CHECKOUT__ = "/api/checkout";
+window.__CARZA_ANON__ = "";
 </script>
 </head>
 <body>
@@ -763,7 +763,7 @@ payBtn.addEventListener("click", async () => {
   try {
     const res = await fetch(CHECKOUT_URL, {
       method:"POST",
-      headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+ANON, "apikey":ANON },
+      headers:{ "Content-Type":"application/json" },
       body: JSON.stringify({ items: cart })
     });
     const data = await res.json();
@@ -787,7 +787,7 @@ if (params.get("commande") === "ok"){
 render();
 
 /* ---------- Suivi de commande ---------- */
-const TRACK_URL = CHECKOUT_URL.replace("/checkout", "/suivi");
+const TRACK_URL = "/api/suivi";
 const LABELS = [
   ["Commande confirmée", "Nous avons bien reçu votre paiement."],
   ["En préparation", "Votre commande est en cours de préparation."],
@@ -803,7 +803,7 @@ tform.addEventListener("submit", async e => {
   try {
     const res = await fetch(TRACK_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json", "Authorization": "Bearer " + ANON, "apikey": ANON },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ order: document.getElementById("tnum").value, email: document.getElementById("tmail").value })
     });
     const d = await res.json();
