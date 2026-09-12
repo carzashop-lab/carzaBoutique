@@ -20,3 +20,15 @@
   [headers.values]
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Les photos ne changent jamais sous un meme nom : un an de cache navigateur
+# et CDN. Une deuxieme visite ne consomme plus rien.
+[[headers]]
+  for = "/img/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"
