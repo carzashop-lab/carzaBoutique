@@ -23,29 +23,29 @@ export const VARIANTS: Record<string, Record<string, Variant>> = {
   // (le cout de base en BDD est celui du jade)
   "rituel-visage": {
     jade:       { label: "Jade vert",   plus: 0,    cost: 0,    sku: "Set jade vert" },
-    obsidienne: { label: "Obsidienne",  plus: 500,  cost: 330,  sku: "Set obsidienne" },
-    quartz:     { label: "Quartz rose", plus: 1000, cost: 580,  sku: "Set quartz rose" },
+    obsidienne: { label: "Obsidienne",  plus: 300,  cost: 330,  sku: "Set obsidienne" },
+    quartz:     { label: "Quartz rose", plus: 500,  cost: 580,  sku: "Set quartz rose" },
     amethyste:  { label: "Améthyste",   plus: 1500, cost: 1450, sku: "Set améthyste" },
   },
 
   // Achat + port : obsidienne 5,29 / quartz 6,49 / aventurine 6,69 / acier 6,69 / tigre 8,49
   "gua-sha-jade": {
     obsidienne: { label: "Obsidienne",   plus: 0,   cost: 0,   sku: "obsidian" },
-    quartz:     { label: "Quartz rose",  plus: 200, cost: 120, sku: "rose quartz" },
-    aventurine: { label: "Aventurine",   plus: 200, cost: 140, sku: "aventurine" },
-    acier:      { label: "Acier poli",   plus: 200, cost: 140, sku: "stainless steel" },
-    tigre:      { label: "Œil-de-tigre", plus: 700, cost: 320, sku: "tiger eye" },
+    quartz:     { label: "Quartz rose",  plus: 100, cost: 120, sku: "rose quartz" },
+    aventurine: { label: "Aventurine",   plus: 100, cost: 140, sku: "aventurine" },
+    acier:      { label: "Acier poli",   plus: 100, cost: 140, sku: "stainless steel" },
+    tigre:      { label: "Œil-de-tigre", plus: 300, cost: 320, sku: "tiger eye" },
   },
 
   // UNE FICHE FOURNISSEUR DIFFERENTE PAR PIERRE
   "rouleau-jade": {
     obsidienne: { label: "Obsidienne",  plus: 0,   cost: 0,
       url: "https://fr.aliexpress.com/item/1005001570281409.html", sku: "Type G" },
-    quartz:     { label: "Quartz rose", plus: 200, cost: 140,
+    quartz:     { label: "Quartz rose", plus: 300, cost: 140,
       url: "https://fr.aliexpress.com/item/1005006296170321.html", sku: "Type 07" },
-    jaspe:      { label: "Jaspe bleu",  plus: 200, cost: 160,
+    jaspe:      { label: "Jaspe bleu",  plus: 300, cost: 160,
       url: "https://fr.aliexpress.com/item/1005006032268304.html", sku: "Type F" },
-    amethyste:  { label: "Améthyste",   plus: 200, cost: 210,
+    amethyste:  { label: "Améthyste",   plus: 300, cost: 210,
       url: "https://fr.aliexpress.com/item/1005002190431930.html", sku: "type 4" },
   },
 };
