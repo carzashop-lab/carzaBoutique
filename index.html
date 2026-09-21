@@ -226,6 +226,8 @@ details p{color:var(--slate);font-size:14.5px;margin:14px 0 0;max-width:68ch}
 .df{padding:22px 26px;border-top:1px solid var(--line);background:var(--paper)}
 .total{display:flex;justify-content:space-between;font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
 .ship{font-size:12.5px;color:var(--slate);margin:9px 0 0}
+.eta{font-size:13px;color:var(--slate);margin:10px 0 0;line-height:1.45}
+.eta b{color:var(--ink,inherit);font-weight:600}
 .fb{height:3px;background:var(--line);border-radius:2px;margin:10px 0 18px;overflow:hidden}
 .fb i{display:block;height:100%;background:var(--jade);width:0;transition:width .4s}
 .pay{width:100%;background:var(--jade);color:#04120C;border:none;border-radius:999px;padding:16px;font-size:15px;font-weight:700;transition:filter .2s}
@@ -964,6 +966,14 @@ const CHECKOUT_URL = window.__CARZA_CHECKOUT__ || "";
 const ANON = window.__CARZA_ANON__ || "";
 const FREE_FROM = 0;   // livraison toujours offerte : elle est deja dans le prix affiche
 // Accepte une URL complete (celle de ton fournisseur) ou un identifiant Unsplash.
+// Fenetre de livraison en dates reelles (5 a 12 jours ouvres), pour que le
+// delai soit connu des la fiche produit et pas decouvert au paiement.
+const ETA = (function(){
+  function plus(n){ const d = new Date(); let k = 0;
+    while (k < n){ d.setDate(d.getDate() + 1); const j = d.getDay(); if (j !== 0 && j !== 6) k++; }
+    return d.toLocaleDateString("fr-FR", { weekday: "short", day: "numeric", month: "short" }); }
+  return { min: plus(5), max: plus(12) };
+})();
 const IMG = (v, w) => {
   const s = String(v);
   // Les photos sont des fichiers .webp servis a la demande, plus du base64
@@ -1005,6 +1015,7 @@ function buildCard(p){
       '<div class="prices"><span class="price"></span><span class="was"></span>' +
         (savings > 0 ? '<span class="save">−' + savings + ' %</span>' : '') + '</div>' +
       '<button class="add"></button>' +
+      '<p class="eta"></p>' +
     '</div>';
 
   const main = el.querySelector(".main img");
@@ -1100,6 +1111,7 @@ function buildCard(p){
   }
   el._paintPrice = paintPrice;
   paintPrice();
+  el.querySelector(".eta").innerHTML = "Reçu chez vous entre le <b>" + ETA.min + "</b> et le <b>" + ETA.max + "</b> · livraison offerte, suivi par e-mail";
   btn.addEventListener("click", e => {
     e.stopPropagation();
     add(p.slug, variant);
@@ -1219,7 +1231,7 @@ function render(){
   });
   foot.hidden = false;
   document.getElementById("subtotal").textContent = euro(sub);
-  document.getElementById("shipNote").textContent = "Livraison offerte — elle est comprise dans le prix.";
+  document.getElementById("shipNote").textContent = "Livraison offerte · reçu entre le " + ETA.min + " et le " + ETA.max;
   document.getElementById("fbar").style.width = "100%";
 }
 const scrim = document.getElementById("scrim"), drawer = document.getElementById("drawer");

@@ -39,7 +39,8 @@ export default async (req: Request, _ctx: Context) => {
   form.set("success_url", `${site}/?commande=ok&session={CHECKOUT_SESSION_ID}`);
   form.set("cancel_url", `${site}/?commande=annulee`);
   form.set("billing_address_collection", "auto");
-  form.set("phone_number_collection[enabled]", "true");
+  // Telephone NON demande : un champ de moins au paiement. Pour la commande
+  // fournisseur, mettre son propre numero si le transporteur en exige un.
   ["FR", "BE", "LU", "CH", "MC"].forEach((c, i) =>
     form.set(`shipping_address_collection[allowed_countries][${i}]`, c)
   );
