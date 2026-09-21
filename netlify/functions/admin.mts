@@ -275,7 +275,9 @@ async function verifier(){
     setTimeout(() => location.reload(), 1200);
   } catch {}
 }
-setInterval(verifier, 30000);
+// Plus de verification automatique toutes les 30 s : chaque appel reveillait
+// la base de donnees, facturee a l'heure tant qu'elle reste eveillee. Les
+// nouvelles commandes arrivent par e-mail ; pour rafraichir, recharger la page.
 </script></body></html>`;
 
   return new Response(html, {
