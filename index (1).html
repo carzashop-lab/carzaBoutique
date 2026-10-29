@@ -205,7 +205,7 @@ footer{padding-block:34px 44px; text-align:center; color:var(--mut); font-size:1
       </div>
 
     </div>
-    <p class="note">Après paiement, tu reçois le lien de téléchargement. Paiement sécurisé via PayPal (biens et services).<br>Pour 9 € de plus, le Pro ne se repaie jamais : chaque mise à jour est incluse à vie.</p>
+    <p class="note">Après paiement, tu reçois le lien de téléchargement. Paiement sécurisé par carte via Stripe. Le téléchargement s'affiche juste après le paiement.<br>Pour 9 € de plus, le Pro ne se repaie jamais : chaque mise à jour est incluse à vie.</p>
   </section>
 
   <section>
@@ -232,30 +232,29 @@ footer{padding-block:34px 44px; text-align:center; color:var(--mut); font-size:1
   <div class="mbox">
     <h3 id="mtitle">Finaliser l'achat</h3>
     <p id="mtext">Tu vas être redirigé vers PayPal. Après paiement, envoie une capture en message et tu reçois le lien de téléchargement.</p>
-    <a class="cta" id="payBtn" href="#" target="_blank" rel="noopener" style="display:inline-flex">Continuer vers PayPal</a>
+    <a class="cta" id="payBtn" href="#" target="_blank" rel="noopener" style="display:inline-flex">Payer avec Stripe</a>
     <div><button class="mclose" onclick="closeM()">Annuler</button></div>
   </div>
 </div>
 
 <script>
-/* ======= CONFIG — remplace TONPSEUDO par ton identifiant PayPal.me ======= */
-var PAYPAL_USER = "TONPSEUDO";
-var CURRENCY = "EUR";
+/* ===== CONFIG — colle tes 2 Stripe Payment Links (buy.stripe.com/...) ===== */
 var PLANS = {
-  std: { price:"16.00", label:"Standard (16 €)" },
-  pro: { price:"25.00", label:"Pro à vie (25 €)" }
+  std: { price:"16", label:"Standard (16 €)",
+         url:"https://buy.stripe.com/4gMeVf9W25rZ4TQ2r6efC09" },
+  pro: { price:"25", label:"Pro à vie (25 €)",
+         url:"https://buy.stripe.com/6oUfZj0lsaMj1HE1n2efC08" }
 };
-/* ======================================================================= */
+/* ========================================================================= */
 
-function payUrl(p){ return "https://www.paypal.com/paypalme/" + PAYPAL_USER + "/" + PLANS[p].price + CURRENCY; }
 function scrollToPricing(){ document.querySelectorAll("section")[2].scrollIntoView({behavior:"smooth"}); }
 function buy(plan){
   plan = PLANS[plan] ? plan : "pro";
-  document.getElementById("payBtn").href = payUrl(plan);
+  document.getElementById("payBtn").href = PLANS[plan].url;
   document.getElementById("mtitle").textContent = "Achat — " + PLANS[plan].label;
   document.getElementById("mtext").textContent =
-    "Tu vas être redirigé vers PayPal pour payer " + PLANS[plan].price.replace(".",",") +
-    " €. Après paiement, envoie une capture en message et tu reçois le lien de téléchargement.";
+    "Tu vas être redirigé vers le paiement sécurisé Stripe pour " + PLANS[plan].price +
+    " €. Le téléchargement s'affiche juste après le paiement.";
   document.getElementById("modal").classList.add("open");
 }
 function closeM(){ document.getElementById("modal").classList.remove("open"); }
