@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Admin — VipOptimizer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600;700&display=swap">
+<style>
+:root{--bg:#0b0616;--bg2:#120a24;--panel:#1a0f30;--panel2:#22134a;--stroke:#3a1f66;--fg:#f2ecff;--mut:#a594cf;
+--pur:#9b4dff;--pur2:#c89bff;--glow:#b06bff;--cyan:#4fe3ff;--good:#5fe0a0;--warn:#ffb84d;color-scheme:dark;}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:radial-gradient(900px 500px at 80% -10%,rgba(123,46,242,.22),transparent 60%),var(--bg);
+color:var(--fg);font-family:"Rajdhani","Segoe UI",sans-serif;
+padding:max(16px,env(safe-area-inset-left,0px))}
+h1,h2{font-family:"Orbitron",sans-serif;margin:0}
+/* gate */
+#gate{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:10;padding:20px}
+.gbox{max-width:360px;width:100%;background:var(--panel);border:1px solid var(--glow);border-radius:18px;padding:30px;text-align:center}
+.gbox h2{font-size:20px;color:var(--pur2);margin-bottom:14px}
+input{width:100%;padding:13px 14px;border-radius:11px;border:1px solid var(--stroke);background:#0d0720;color:var(--fg);font-size:15px;font-family:inherit}
+.btn{cursor:pointer;border:0;font-family:"Orbitron",sans-serif;font-weight:700;color:#fff;padding:12px 22px;border-radius:11px;
+background:linear-gradient(135deg,var(--pur),var(--glow));box-shadow:0 8px 22px rgba(155,77,255,.4);font-size:14px}
+.btn.ghost{background:transparent;border:1.5px solid var(--stroke);color:var(--pur2);box-shadow:none}
+.btn.sm{padding:8px 14px;font-size:13px}
+.wrap{max-width:900px;margin:0 auto;padding:24px 0 60px}
+.warn{background:rgba(255,184,77,.1);border:1px solid var(--warn);color:var(--warn);border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.5;margin:16px 0}
+.card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--stroke);border-radius:16px;padding:20px;margin:14px 0}
+.card h2{font-size:17px;color:var(--pur2);margin-bottom:12px}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.field{display:flex;gap:8px;align-items:center;background:#0d0720;border:1px solid var(--stroke);border-radius:10px;padding:8px 10px;flex:1;min-width:0}
+.field input{border:0;background:transparent;padding:4px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--stroke)}
+th{color:var(--mut);font-size:12px;letter-spacing:.5px;text-transform:uppercase}
+.pill{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
+.pill.ok{background:rgba(95,224,160,.15);color:var(--good)}
+.pill.wait{background:rgba(255,184,77,.15);color:var(--warn)}
+a{color:var(--cyan)}
+.muted{color:var(--mut);font-size:13px;line-height:1.5}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:620px){.grid2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gbox">
+    <h2>🔒 Accès admin</h2>
+    <input id="pw" type="password" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')unlock()">
+    <div style="margin-top:12px"><button class="btn" onclick="unlock()">Entrer</button></div>
+    <p id="err" class="muted" style="color:#ff7a7a;min-height:16px;margin-top:10px"></p>
+  </div>
+</div>
+
+<div class="wrap" id="app" hidden>
+  <h1 style="font-size:24px;color:var(--pur2)">VipOptimizer — Admin</h1>
+  <p class="muted">Suivi des commandes et livraison.</p>
+
+  <div class="warn">
+    ⚠ La vraie liste de tes paiements (sûre, officielle) est dans ton <b>Dashboard Stripe → Paiements</b>.
+    Cette page est un suivi manuel stocké dans ce navigateur. Le mot de passe ici est une protection légère, pas une vraie sécurité.
+  </div>
+
+  <div class="card">
+    <h2>🔗 Liens de téléchargement</h2>
+    <div class="grid2">
+      <div class="field"><span class="muted">Standard</span><input id="dlStd" placeholder="Colle ton lien Drive/Mega Standard"></div>
+      <div class="field"><span class="muted">Pro</span><input id="dlPro" placeholder="Colle ton lien Drive/Mega Pro"></div>
+    </div>
+    <div style="margin-top:10px"><button class="btn sm" onclick="saveLinks()">Enregistrer les liens</button></div>
+  </div>
+
+  <div class="card">
+    <h2>✉️ Message de livraison (à copier)</h2>
+    <p class="muted" id="tpl" style="white-space:pre-wrap"></p>
+    <div class="row" style="margin-top:8px">
+      <button class="btn sm" onclick="copyTpl('std')">Copier (Standard)</button>
+      <button class="btn sm ghost" onclick="copyTpl('pro')">Copier (Pro)</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>➕ Nouvelle commande</h2>
+    <div class="grid2">
+      <div class="field"><input id="iPseudo" placeholder="Pseudo TikTok / nom"></div>
+      <div class="field"><input id="iCode" placeholder="Code Stripe envoyé par l'acheteur"></div>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <select id="iPlan" style="padding:11px;border-radius:10px;background:#0d0720;color:var(--fg);border:1px solid var(--stroke)">
+        <option value="Standard 16€">Standard 16€</option>
+        <option value="Pro 25€">Pro 25€</option>
+      </select>
+      <button class="btn sm" onclick="addOrder()">Ajouter</button>
+      <span class="muted">Vérifie le code dans Stripe avant de livrer.</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📦 Commandes</h2>
+    <table id="tbl"><thead><tr><th>Date</th><th>Client</th><th>Offre</th><th>Code</th><th>Statut</th><th></th></tr></thead><tbody></tbody></table>
+    <p class="muted" id="empty">Aucune commande enregistrée.</p>
+    <p style="margin-top:12px"><a href="https://dashboard.stripe.com/payments" target="_blank" rel="noopener">→ Ouvrir mes paiements Stripe</a></p>
+  </div>
+</div>
+
+<script>
+var PW = "Jemangela12@";
+function unlock(){
+  if(document.getElementById("pw").value === PW){
+    document.getElementById("gate").hidden = true;
+    document.getElementById("app").hidden = false;
+    render();
+  } else { document.getElementById("err").textContent = "Mot de passe incorrect."; }
+}
+function load(k,d){ try{return JSON.parse(localStorage.getItem(k))||d;}catch(e){return d;} }
+function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
+var orders = load("vip_orders",[]);
+var links = load("vip_links",{std:"",pro:""});
+function saveLinks(){ links.std=document.getElementById("dlStd").value.trim();
+  links.pro=document.getElementById("dlPro").value.trim(); save("vip_links",links); render(); }
+function tplText(plan){ var l = plan==="pro"?links.pro:links.std;
+  return "Merci pour ton achat de VipOptimizer ! 🚀\n\nTéléchargement : "+(l||"[colle ton lien]")+
+  "\n\nClic droit → Exécuter en administrateur. Un point de restauration est créé automatiquement avant l'optimisation.\nWindows affichera « éditeur inconnu » → Informations complémentaires → Exécuter quand même.\n\nBesoin d'aide ? Réponds ici."; }
+function copyTpl(p){ navigator.clipboard.writeText(tplText(p)).then(function(){
+  var b=event.target,t=b.textContent;b.textContent="✓ Copié";setTimeout(function(){b.textContent=t;},1400);}).catch(function(){}); }
+function addOrder(){
+  var o={d:new Date().toLocaleDateString("fr-FR"),
+    who:document.getElementById("iPseudo").value.trim(),
+    code:document.getElementById("iCode").value.trim(),
+    plan:document.getElementById("iPlan").value, done:false};
+  if(!o.who&&!o.code) return;
+  orders.unshift(o); save("vip_orders",orders);
+  document.getElementById("iPseudo").value="";document.getElementById("iCode").value="";
+  render();
+}
+function toggle(i){ orders[i].done=!orders[i].done; save("vip_orders",orders); render(); }
+function del(i){ orders.splice(i,1); save("vip_orders",orders); render(); }
+function render(){
+  document.getElementById("dlStd").value=links.std;
+  document.getElementById("dlPro").value=links.pro;
+  document.getElementById("tpl").textContent=tplText("std");
+  var tb=document.querySelector("#tbl tbody"); tb.innerHTML="";
+  document.getElementById("empty").style.display = orders.length?"none":"block";
+  orders.forEach(function(o,i){
+    var tr=document.createElement("tr");
+    tr.innerHTML="<td>"+o.d+"</td><td>"+esc(o.who)+"</td><td>"+esc(o.plan)+"</td><td style='word-break:break-all;max-width:180px'>"+esc(o.code)+"</td>"+
+    "<td><span class='pill "+(o.done?"ok":"wait")+"'>"+(o.done?"Livré":"À livrer")+"</span></td>"+
+    "<td class='row'><button class='btn sm ghost' onclick='toggle("+i+")'>"+(o.done?"Annuler":"Livré")+"</button> <button class='btn sm ghost' onclick='del("+i+")'>✕</button></td>";
+    tb.appendChild(tr);
+  });
+}
+function esc(s){ return (s||"").replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+</script>
+</body>
+</html>

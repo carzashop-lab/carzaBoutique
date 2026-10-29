@@ -250,12 +250,7 @@ var PLANS = {
 function scrollToPricing(){ document.querySelectorAll("section")[2].scrollIntoView({behavior:"smooth"}); }
 function buy(plan){
   plan = PLANS[plan] ? plan : "pro";
-  document.getElementById("payBtn").href = PLANS[plan].url;
-  document.getElementById("mtitle").textContent = "Achat — " + PLANS[plan].label;
-  document.getElementById("mtext").textContent =
-    "Tu vas être redirigé vers le paiement sécurisé Stripe pour " + PLANS[plan].price +
-    " €. Le téléchargement s'affiche juste après le paiement.";
-  document.getElementById("modal").classList.add("open");
+  window.location.href = PLANS[plan].url;   // redirection directe vers Stripe
 }
 function closeM(){ document.getElementById("modal").classList.remove("open"); }
 document.getElementById("modal").addEventListener("click",function(e){ if(e.target===this) closeM(); });
