@@ -46,7 +46,7 @@ a{color:var(--cyan)}
 <div id="gate">
   <div class="gbox">
     <h2>🔒 Accès admin</h2>
-    <input id="pw" type="password" placeholder="Mot de passe" onkeydown="if(event.key==='Enter')unlock()">
+    <input id="pw" type="password" placeholder="Mot de passe" autocapitalize="none" autocorrect="off" autocomplete="off" spellcheck="false" onkeydown="if(event.key==='Enter')unlock()">
     <div style="margin-top:12px"><button class="btn" onclick="unlock()">Entrer</button></div>
     <p id="err" class="muted" style="color:#ff7a7a;min-height:16px;margin-top:10px"></p>
   </div>
@@ -106,7 +106,7 @@ a{color:var(--cyan)}
 <script>
 var PW = "Jemangela12@";
 function unlock(){
-  if(document.getElementById("pw").value === PW){
+  if(document.getElementById("pw").value.trim() === PW){
     document.getElementById("gate").hidden = true;
     document.getElementById("app").hidden = false;
     render();
