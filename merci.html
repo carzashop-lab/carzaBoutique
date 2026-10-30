@@ -19,9 +19,9 @@ h1{font-family:"Orbitron",sans-serif;font-size:28px;margin:0 0 6px;
 background:linear-gradient(90deg,#fff,var(--pur2),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
 .check{font-size:46px;margin-bottom:8px}
 p{color:var(--mut);line-height:1.55;font-size:15px}
-.codebox{background:#0d0720;border:1px dashed var(--glow);border-radius:14px;padding:18px;margin:20px 0}
-.clabel{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:8px}
-#code{font-family:"Orbitron",sans-serif;font-size:17px;color:#fff;word-break:break-all;line-height:1.4}
+.codebox{background:#0d0720;border:1px dashed var(--glow);border-radius:14px;padding:20px;margin:20px 0}
+.clabel{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+#code{font-family:"Orbitron",sans-serif;font-size:32px;letter-spacing:4px;color:#fff}
 .btn{display:inline-flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;border:0;
 font-family:"Orbitron",sans-serif;font-weight:700;font-size:15px;color:#fff;padding:13px 26px;border-radius:12px;
 background:linear-gradient(135deg,var(--pur),var(--glow));box-shadow:0 10px 26px rgba(155,77,255,.45);text-decoration:none}
@@ -36,32 +36,41 @@ small{color:var(--mut);font-size:12.5px}
   <div class="box">
     <div class="check">✅</div>
     <h1>Paiement réussi</h1>
-    <p>Merci pour ton achat de VipOptimizer. Pour recevoir ton fichier, envoie le code ci-dessous.</p>
+    <p>Merci pour ton achat de VipOptimizer. Voici ton code d'accès.</p>
 
     <div class="codebox">
-      <div class="clabel">Ton code d'accès unique</div>
+      <div class="clabel">Ton code</div>
       <div id="code">—</div>
     </div>
     <button class="btn ghost" onclick="copyCode()">📋 Copier le code</button>
 
     <ul class="steps">
-      <li><b>1.</b> Copie ton code d'accès ci-dessus.</li>
-      <li><b>2.</b> Envoie-le en message privé sur TikTok (ou à l'adresse ci-dessous).</li>
-      <li><b>3.</b> Tu reçois le lien de téléchargement de VipOptimizer.</li>
+      <li><b>1.</b> Copie ton code ci-dessus.</li>
+      <li><b>2.</b> Rejoins le Discord et crée un ticket.</li>
+      <li><b>3.</b> Donne ton code → tu reçois VipOptimizer.</li>
     </ul>
 
-    <p class="contact">📩 <b>Envoie ton code en DM TikTok @xviperz10</b></p>
-    <small>Garde ce code : il prouve ton achat.</small>
+    <p class="contact">💬 <b>Rejoins le Discord : discord.gg/ton_lien</b></p>
+    <small>Garde ce code précieusement.</small>
   </div>
 <script>
-// Stripe ajoute ?session_id=... quand tu actives la redirection avec {CHECKOUT_SESSION_ID}
-var p = new URLSearchParams(location.search);
-var code = p.get("session_id") || p.get("code") || ("VIP-" + Date.now().toString(36).toUpperCase());
+// Code = 7 chiffres + 3 lettres, mélangés. Stable par achat (gardé même si refresh).
+function gen(){
+  var D="0123456789", L="ABCDEFGHJKLMNPQRSTUVWXYZ", a=[];
+  for(var i=0;i<7;i++) a.push(D[Math.floor(Math.random()*D.length)]);
+  for(var j=0;j<3;j++) a.push(L[Math.floor(Math.random()*L.length)]);
+  for(var k=a.length-1;k>0;k--){var r=Math.floor(Math.random()*(k+1));var t=a[k];a[k]=a[r];a[r]=t;}
+  return a.join("");
+}
+// clé : l'id de session Stripe si présent, sinon une clé fixe navigateur
+var sid = new URLSearchParams(location.search).get("session_id") || "default";
+var key = "vip_code_" + sid, code;
+try{ code = localStorage.getItem(key); }catch(e){}
+if(!code){ code = gen(); try{ localStorage.setItem(key, code); }catch(e){} }
 document.getElementById("code").textContent = code;
 function copyCode(){
   navigator.clipboard.writeText(code).then(function(){
-    var b=event.target; var t=b.textContent; b.textContent="✓ Copié !";
-    setTimeout(function(){b.textContent=t;},1500);
+    var b=event.target,t=b.textContent;b.textContent="✓ Copié !";setTimeout(function(){b.textContent=t;},1500);
   }).catch(function(){
     var r=document.createRange();r.selectNodeContents(document.getElementById("code"));
     var s=getSelection();s.removeAllRanges();s.addRange(r);
