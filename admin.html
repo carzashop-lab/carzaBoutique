@@ -7,14 +7,12 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600;700&display=swap">
 <style>
 :root{--bg:#0b0616;--bg2:#120a24;--panel:#1a0f30;--panel2:#22134a;--stroke:#3a1f66;--fg:#f2ecff;--mut:#a594cf;
---pur:#9b4dff;--pur2:#c89bff;--glow:#b06bff;--cyan:#4fe3ff;--good:#5fe0a0;--warn:#ffb84d;color-scheme:dark;}
+--pur:#9b4dff;--pur2:#c89bff;--glow:#b06bff;--cyan:#4fe3ff;--good:#5fe0a0;--warn:#ffb84d;--bad:#ff7a7a;color-scheme:dark;}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 body{margin:0;min-height:100vh;background:radial-gradient(900px 500px at 80% -10%,rgba(123,46,242,.22),transparent 60%),var(--bg);
-color:var(--fg);font-family:"Rajdhani","Segoe UI",sans-serif;
-padding:max(16px,env(safe-area-inset-left,0px))}
+color:var(--fg);font-family:"Rajdhani","Segoe UI",sans-serif;padding:max(16px,env(safe-area-inset-left,0px))}
 h1,h2{font-family:"Orbitron",sans-serif;margin:0}
-/* gate */
 #gate{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg);z-index:10;padding:20px}
 .gbox{max-width:360px;width:100%;background:var(--panel);border:1px solid var(--glow);border-radius:18px;padding:30px;text-align:center}
 .gbox h2{font-size:20px;color:var(--pur2);margin-bottom:14px}
@@ -23,8 +21,7 @@ input{width:100%;padding:13px 14px;border-radius:11px;border:1px solid var(--str
 background:linear-gradient(135deg,var(--pur),var(--glow));box-shadow:0 8px 22px rgba(155,77,255,.4);font-size:14px}
 .btn.ghost{background:transparent;border:1.5px solid var(--stroke);color:var(--pur2);box-shadow:none}
 .btn.sm{padding:8px 14px;font-size:13px}
-.wrap{max-width:900px;margin:0 auto;padding:24px 0 60px}
-.warn{background:rgba(255,184,77,.1);border:1px solid var(--warn);color:var(--warn);border-radius:12px;padding:14px 16px;font-size:13.5px;line-height:1.5;margin:16px 0}
+.wrap{max-width:960px;margin:0 auto;padding:24px 0 60px}
 .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--stroke);border-radius:16px;padding:20px;margin:14px 0}
 .card h2{font-size:17px;color:var(--pur2);margin-bottom:12px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
@@ -34,12 +31,17 @@ table{width:100%;border-collapse:collapse;font-size:13.5px}
 th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--stroke)}
 th{color:var(--mut);font-size:12px;letter-spacing:.5px;text-transform:uppercase}
 .pill{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
-.pill.ok{background:rgba(95,224,160,.15);color:var(--good)}
-.pill.wait{background:rgba(255,184,77,.15);color:var(--warn)}
+.pill.used{background:rgba(95,224,160,.15);color:var(--good)}
+.pill.free{background:rgba(255,184,77,.15);color:var(--warn)}
 a{color:var(--cyan)}
 .muted{color:var(--mut);font-size:13px;line-height:1.5}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-@media(max-width:620px){.grid2{grid-template-columns:1fr}}
+.stat{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.stat .b{background:#0d0720;border:1px solid var(--stroke);border-radius:12px;padding:12px 16px;min-width:120px}
+.stat .n{font-family:"Orbitron",sans-serif;font-size:22px;color:var(--pur2)}
+.stat .l{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.verdict{margin-top:10px;font-size:14.5px;font-weight:600}
+.verdict.ok{color:var(--good)}.verdict.no{color:var(--bad)}
+code{background:#0d0720;border:1px solid var(--stroke);border-radius:6px;padding:2px 7px;font-family:"Orbitron",sans-serif;font-size:12.5px}
 </style>
 </head>
 <body>
@@ -55,102 +57,102 @@ a{color:var(--cyan)}
 
 <div class="wrap" id="app" hidden>
   <h1 style="font-size:24px;color:var(--pur2)">VipOptimizer — Admin</h1>
-  <p class="muted">Suivi des commandes et livraison.</p>
+  <p class="muted">Commandes et codes en temps réel (base de données).</p>
 
-  <div class="warn">
-    ⚠ La vraie liste de tes paiements (sûre, officielle) est dans ton <b>Dashboard Stripe → Paiements</b>.
-    Cette page est un suivi manuel stocké dans ce navigateur. Le mot de passe ici est une protection légère, pas une vraie sécurité.
+  <div class="card">
+    <h2>🔎 Vérifier un code</h2>
+    <div class="row">
+      <div class="field"><input id="chk" placeholder="Colle un code client (ex: 4A82K10ZQ3)"></div>
+      <button class="btn sm" onclick="verify()">Vérifier</button>
+    </div>
+    <div id="chkRes" class="verdict"></div>
   </div>
 
   <div class="card">
-    <h2>🔗 Liens de téléchargement</h2>
-    <div class="grid2">
-      <div class="field"><span class="muted">Standard</span><input id="dlStd" placeholder="Colle ton lien Drive/Mega Standard"></div>
-      <div class="field"><span class="muted">Pro</span><input id="dlPro" placeholder="Colle ton lien Drive/Mega Pro"></div>
+    <div class="stat" id="stats"></div>
+    <div class="row" style="justify-content:space-between">
+      <h2 style="margin:0">📦 Commandes</h2>
+      <button class="btn sm ghost" onclick="loadOrders()">↻ Rafraîchir</button>
     </div>
-    <div style="margin-top:10px"><button class="btn sm" onclick="saveLinks()">Enregistrer les liens</button></div>
-  </div>
-
-  <div class="card">
-    <h2>✉️ Message de livraison (à copier)</h2>
-    <p class="muted" id="tpl" style="white-space:pre-wrap"></p>
-    <div class="row" style="margin-top:8px">
-      <button class="btn sm" onclick="copyTpl('std')">Copier (Standard)</button>
-      <button class="btn sm ghost" onclick="copyTpl('pro')">Copier (Pro)</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>➕ Nouvelle commande</h2>
-    <div class="grid2">
-      <div class="field"><input id="iPseudo" placeholder="Pseudo TikTok / nom"></div>
-      <div class="field"><input id="iCode" placeholder="Code Stripe envoyé par l'acheteur"></div>
-    </div>
-    <div class="row" style="margin-top:10px">
-      <select id="iPlan" style="padding:11px;border-radius:10px;background:#0d0720;color:var(--fg);border:1px solid var(--stroke)">
-        <option value="Standard 16€">Standard 16€</option>
-        <option value="Pro 25€">Pro 25€</option>
-      </select>
-      <button class="btn sm" onclick="addOrder()">Ajouter</button>
-      <span class="muted">Vérifie le code dans Stripe avant de livrer.</span>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>📦 Commandes</h2>
-    <table id="tbl"><thead><tr><th>Date</th><th>Client</th><th>Offre</th><th>Code</th><th>Statut</th><th></th></tr></thead><tbody></tbody></table>
-    <p class="muted" id="empty">Aucune commande enregistrée.</p>
-    <p style="margin-top:12px"><a href="https://dashboard.stripe.com/payments" target="_blank" rel="noopener">→ Ouvrir mes paiements Stripe</a></p>
+    <table id="tbl"><thead><tr><th>Date</th><th>Email</th><th>Offre</th><th>Code</th><th>Statut</th><th>Machine</th></tr></thead><tbody></tbody></table>
+    <p class="muted" id="empty" hidden>Aucune commande pour l'instant.</p>
+    <p class="muted" id="loadErr" hidden style="color:var(--bad)"></p>
+    <p style="margin-top:12px"><a href="https://dashboard.stripe.com/payments" target="_blank" rel="noopener">→ Vérifier les paiements sur Stripe</a></p>
   </div>
 </div>
 
 <script>
-var PW = "Jemangela12@";
+var API = "/.netlify/functions";
+var PW = "";
 function unlock(){
-  if(document.getElementById("pw").value.trim() === PW){
-    document.getElementById("gate").hidden = true;
-    document.getElementById("app").hidden = false;
-    render();
-  } else { document.getElementById("err").textContent = "Mot de passe incorrect."; }
+  var v = document.getElementById("pw").value.trim();
+  if(!v){ return; }
+  PW = v;
+  // test d'acces via l'API
+  fetch(API + "/admin?pw=" + encodeURIComponent(PW))
+    .then(function(r){
+      if(r.status === 401){ document.getElementById("err").textContent = "Mot de passe incorrect."; return null; }
+      return r.json();
+    })
+    .then(function(j){
+      if(!j) return;
+      document.getElementById("gate").hidden = true;
+      document.getElementById("app").hidden = false;
+      renderOrders(j.orders || []);
+    })
+    .catch(function(){ document.getElementById("err").textContent = "Erreur réseau. Réessaie."; });
 }
-function load(k,d){ try{return JSON.parse(localStorage.getItem(k))||d;}catch(e){return d;} }
-function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
-var orders = load("vip_orders",[]);
-var links = load("vip_links",{std:"",pro:""});
-function saveLinks(){ links.std=document.getElementById("dlStd").value.trim();
-  links.pro=document.getElementById("dlPro").value.trim(); save("vip_links",links); render(); }
-function tplText(plan){ var l = plan==="pro"?links.pro:links.std;
-  return "Merci pour ton achat de VipOptimizer ! 🚀\n\nTéléchargement : "+(l||"[colle ton lien]")+
-  "\n\nClic droit → Exécuter en administrateur. Un point de restauration est créé automatiquement avant l'optimisation.\nWindows affichera « éditeur inconnu » → Informations complémentaires → Exécuter quand même.\n\nBesoin d'aide ? Réponds ici."; }
-function copyTpl(p){ navigator.clipboard.writeText(tplText(p)).then(function(){
-  var b=event.target,t=b.textContent;b.textContent="✓ Copié";setTimeout(function(){b.textContent=t;},1400);}).catch(function(){}); }
-function addOrder(){
-  var o={d:new Date().toLocaleDateString("fr-FR"),
-    who:document.getElementById("iPseudo").value.trim(),
-    code:document.getElementById("iCode").value.trim(),
-    plan:document.getElementById("iPlan").value, done:false};
-  if(!o.who&&!o.code) return;
-  orders.unshift(o); save("vip_orders",orders);
-  document.getElementById("iPseudo").value="";document.getElementById("iCode").value="";
-  render();
+function loadOrders(){
+  fetch(API + "/admin?pw=" + encodeURIComponent(PW))
+    .then(function(r){ return r.json(); })
+    .then(function(j){ renderOrders(j.orders || []); })
+    .catch(function(){ document.getElementById("loadErr").hidden=false;
+      document.getElementById("loadErr").textContent="Impossible de charger les commandes."; });
 }
-function toggle(i){ orders[i].done=!orders[i].done; save("vip_orders",orders); render(); }
-function del(i){ orders.splice(i,1); save("vip_orders",orders); render(); }
-function render(){
-  document.getElementById("dlStd").value=links.std;
-  document.getElementById("dlPro").value=links.pro;
-  document.getElementById("tpl").textContent=tplText("std");
-  var tb=document.querySelector("#tbl tbody"); tb.innerHTML="";
-  document.getElementById("empty").style.display = orders.length?"none":"block";
-  orders.forEach(function(o,i){
-    var tr=document.createElement("tr");
-    tr.innerHTML="<td>"+o.d+"</td><td>"+esc(o.who)+"</td><td>"+esc(o.plan)+"</td><td style='word-break:break-all;max-width:180px'>"+esc(o.code)+"</td>"+
-    "<td><span class='pill "+(o.done?"ok":"wait")+"'>"+(o.done?"Livré":"À livrer")+"</span></td>"+
-    "<td class='row'><button class='btn sm ghost' onclick='toggle("+i+")'>"+(o.done?"Annuler":"Livré")+"</button> <button class='btn sm ghost' onclick='del("+i+")'>✕</button></td>";
+function esc(s){ return (s||"").toString().replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+function fdate(s){ try{ return new Date(s).toLocaleString("fr-FR"); }catch(e){ return s||""; } }
+function renderOrders(list){
+  var tb = document.querySelector("#tbl tbody"); tb.innerHTML="";
+  document.getElementById("empty").hidden = list.length>0;
+  var used = 0;
+  list.forEach(function(o){
+    if(o.used) used++;
+    var tr = document.createElement("tr");
+    tr.innerHTML =
+      "<td>"+fdate(o.created_at)+"</td>"+
+      "<td style='word-break:break-all;max-width:170px'>"+esc(o.email)+"</td>"+
+      "<td>"+esc(o.plan)+"</td>"+
+      "<td><code>"+esc(o.code)+"</code></td>"+
+      "<td><span class='pill "+(o.used?"used":"free")+"'>"+(o.used?"Activé":"Pas encore")+"</span></td>"+
+      "<td class='muted' style='word-break:break-all;max-width:120px'>"+esc(o.machine_id? (o.machine_id.slice(0,10)+"…") : "—")+"</td>";
     tb.appendChild(tr);
   });
+  var st = document.getElementById("stats");
+  st.innerHTML =
+    "<div class='b'><div class='n'>"+list.length+"</div><div class='l'>Ventes</div></div>"+
+    "<div class='b'><div class='n'>"+used+"</div><div class='l'>Activés</div></div>"+
+    "<div class='b'><div class='n'>"+(list.length-used)+"</div><div class='l'>En attente</div></div>";
 }
-function esc(s){ return (s||"").replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+function verify(){
+  var c = document.getElementById("chk").value.trim();
+  var box = document.getElementById("chkRes");
+  if(!c){ box.textContent=""; return; }
+  box.className="verdict"; box.textContent="Vérification…";
+  fetch(API + "/admin?pw=" + encodeURIComponent(PW) + "&check=" + encodeURIComponent(c))
+    .then(function(r){ return r.json(); })
+    .then(function(j){
+      if(j.found && j.order){
+        var o=j.order;
+        box.className="verdict ok";
+        box.innerHTML = "✅ Code VALIDE — "+esc(o.plan||"")+" ("+(o.amount!=null?o.amount+" €":"")+")<br>"+
+          "Email : "+esc(o.email||"—")+" · "+(o.used?("Déjà activé le "+fdate(o.used_at)):"Pas encore activé");
+      } else {
+        box.className="verdict no";
+        box.textContent = "❌ Code INCONNU — aucune commande avec ce code.";
+      }
+    })
+    .catch(function(){ box.className="verdict no"; box.textContent="Erreur réseau."; });
+}
 </script>
 </body>
 </html>

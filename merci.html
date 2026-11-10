@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600;700&display=swap">
 <style>
 :root{--bg:#0b0616;--bg2:#120a24;--panel:#1a0f30;--stroke:#3a1f66;--fg:#f2ecff;--mut:#a594cf;
---pur:#9b4dff;--pur2:#c89bff;--glow:#b06bff;--cyan:#4fe3ff;--good:#5fe0a0;color-scheme:dark;}
+--pur:#9b4dff;--pur2:#c89bff;--glow:#b06bff;--cyan:#4fe3ff;--good:#5fe0a0;--bad:#ff7a7a;color-scheme:dark;}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;
 background:radial-gradient(900px 500px at 50% -10%,rgba(123,46,242,.3),transparent 60%),var(--bg);
@@ -21,7 +21,7 @@ background:linear-gradient(90deg,#fff,var(--pur2),var(--cyan));-webkit-backgroun
 p{color:var(--mut);line-height:1.55;font-size:15px}
 .codebox{background:#0d0720;border:1px dashed var(--glow);border-radius:14px;padding:20px;margin:20px 0}
 .clabel{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
-#code{font-family:"Orbitron",sans-serif;font-size:32px;letter-spacing:4px;color:#fff}
+#code{font-family:"Orbitron",sans-serif;font-size:32px;letter-spacing:4px;color:#fff;word-break:break-all}
 .btn{display:inline-flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;border:0;
 font-family:"Orbitron",sans-serif;font-weight:700;font-size:15px;color:#fff;padding:13px 26px;border-radius:12px;
 background:linear-gradient(135deg,var(--pur),var(--glow));box-shadow:0 10px 26px rgba(155,77,255,.45);text-decoration:none}
@@ -30,51 +30,115 @@ background:linear-gradient(135deg,var(--pur),var(--glow));box-shadow:0 10px 26px
 .steps li{display:flex;gap:10px;font-size:14.5px}.steps b{color:var(--pur2)}
 .contact{font-size:14px;color:var(--fg);margin-top:10px}
 small{color:var(--mut);font-size:12.5px}
+.err{color:var(--bad);font-size:14.5px;line-height:1.5}
+.spin{width:30px;height:30px;border:3px solid var(--stroke);border-top-color:var(--glow);border-radius:50%;
+animation:sp 1s linear infinite;margin:6px auto}
+@keyframes sp{to{transform:rotate(360deg)}}
+.plan{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:999px;font-weight:700;font-size:13px;
+background:rgba(155,77,255,.18);color:var(--pur2)}
 </style>
 </head>
 <body>
   <div class="box">
     <div class="check">✅</div>
     <h1>Paiement réussi</h1>
-    <p>Merci pour ton achat de VipOptimizer. Voici ton code d'accès.</p>
+    <p>Merci pour ton achat de VipOptimizer. Voici ton code d'activation.</p>
+    <div id="planWrap" hidden><span class="plan" id="plan"></span></div>
 
     <div class="codebox">
-      <div class="clabel">Ton code</div>
-      <div id="code">—</div>
+      <div class="clabel">Ton code d'activation</div>
+      <div id="code"><div class="spin"></div></div>
     </div>
-    <button class="btn ghost" onclick="copyCode()">📋 Copier le code</button>
+    <button class="btn ghost" id="copyBtn" onclick="copyCode()" hidden>📋 Copier le code</button>
 
-    <ul class="steps">
-      <li><b>1.</b> Copie ton code ci-dessus.</li>
-      <li><b>2.</b> Rejoins le Discord et crée un ticket.</li>
-      <li><b>3.</b> Donne ton code → tu reçois VipOptimizer.</li>
-    </ul>
+    <div id="okBlock" hidden>
+      <ul class="steps">
+        <li><b>1.</b> Copie ton code ci-dessus (garde-le précieusement).</li>
+        <li><b>2.</b> Télécharge VipOptimizer et lance-le.</li>
+        <li><b>3.</b> Au démarrage, colle ton code → l'appli s'active.</li>
+      </ul>
+      <p class="contact">💬 <b>Besoin d'aide ? Discord : discord.gg/ton_lien</b></p>
+      <small>⚠ Ce code ne fonctionne que sur <b>un seul PC</b>. Une fois activé, il est lié à ta machine.</small>
+    </div>
 
-    <p class="contact">💬 <b>Rejoins le Discord : discord.gg/ton_lien</b></p>
-    <small>Garde ce code précieusement.</small>
+    <div id="errBlock" hidden>
+      <p class="err" id="errMsg"></p>
+      <p class="contact">💬 <b>Contacte-moi sur Discord : discord.gg/ton_lien</b> avec ta preuve de paiement.</p>
+    </div>
   </div>
+
+<!-- EmailJS : notif d'achat dans ta boite mail -->
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
 <script>
-// Code = 7 chiffres + 3 lettres, mélangés. Stable par achat (gardé même si refresh).
-function gen(){
-  var D="0123456789", L="ABCDEFGHJKLMNPQRSTUVWXYZ", a=[];
-  for(var i=0;i<7;i++) a.push(D[Math.floor(Math.random()*D.length)]);
-  for(var j=0;j<3;j++) a.push(L[Math.floor(Math.random()*L.length)]);
-  for(var k=a.length-1;k>0;k--){var r=Math.floor(Math.random()*(k+1));var t=a[k];a[k]=a[r];a[r]=t;}
-  return a.join("");
+/* ========= CONFIG EMAILJS (remplace par tes valeurs) ========= */
+var EMAILJS_PUBLIC_KEY = "TON_PUBLIC_KEY";     // EmailJS -> Account -> General
+var EMAILJS_SERVICE_ID = "TON_SERVICE_ID";     // EmailJS -> Email Services
+var EMAILJS_TEMPLATE_ID = "TON_TEMPLATE_ID";   // EmailJS -> Email Templates
+/* ============================================================= */
+
+var API = "/.netlify/functions";
+var codeVal = "";
+
+function show(id){ document.getElementById(id).hidden = false; }
+function hide(id){ document.getElementById(id).hidden = true; }
+
+function fail(msg){
+  document.getElementById("code").textContent = "—";
+  document.getElementById("errMsg").textContent = msg;
+  show("errBlock");
 }
-// clé : l'id de session Stripe si présent, sinon une clé fixe navigateur
-var sid = new URLSearchParams(location.search).get("session_id") || "default";
-var key = "vip_code_" + sid, code;
-try{ code = localStorage.getItem(key); }catch(e){}
-if(!code){ code = gen(); try{ localStorage.setItem(key, code); }catch(e){} }
-document.getElementById("code").textContent = code;
+
+function notifyOwner(data){
+  // envoi une seule fois par session (anti double-envoi au refresh)
+  var flag = "vip_notified_" + (data.session_id||"x");
+  try{ if(localStorage.getItem(flag)) return; }catch(e){}
+  if(!window.emailjs || EMAILJS_PUBLIC_KEY.indexOf("TON_")===0) return;
+  try{ emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); }catch(e){}
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    code: data.code,
+    email: data.email || "inconnu",
+    plan: data.plan || "",
+    amount: data.amount != null ? (data.amount+" €") : "",
+    date: new Date().toLocaleString("fr-FR")
+  }).then(function(){ try{ localStorage.setItem(flag,"1"); }catch(e){} })
+    .catch(function(){ /* silencieux : le code reste valide meme si l'email echoue */ });
+}
+
+(function(){
+  var sid = new URLSearchParams(location.search).get("session_id");
+  if(!sid){
+    fail("Ouvre cette page depuis le lien de confirmation reçu juste après le paiement.");
+    return;
+  }
+  fetch(API + "/claim?session_id=" + encodeURIComponent(sid))
+    .then(function(r){ return r.json().then(function(j){ return {status:r.status, j:j}; }); })
+    .then(function(res){
+      var j = res.j;
+      if(j && j.code){
+        codeVal = j.code;
+        document.getElementById("code").textContent = j.code;
+        show("copyBtn"); show("okBlock");
+        if(j.plan){ document.getElementById("plan").textContent = "Version " + j.plan; show("planWrap"); }
+        notifyOwner({ code:j.code, email:j.email, plan:j.plan, amount:j.amount, session_id:sid });
+      } else if(j && j.error === "not_paid"){
+        fail("Ce paiement n'est pas encore confirmé. Attends 1 minute et recharge la page.");
+      } else if(j && j.error === "no_session"){
+        fail("Lien invalide. Ouvre la page depuis la confirmation de paiement.");
+      } else {
+        fail("Impossible de générer ton code pour le moment. Contacte-moi avec ta preuve de paiement.");
+      }
+    })
+    .catch(function(){
+      fail("Erreur réseau. Recharge la page dans quelques secondes.");
+    });
+})();
+
 function copyCode(){
-  navigator.clipboard.writeText(code).then(function(){
-    var b=event.target,t=b.textContent;b.textContent="✓ Copié !";setTimeout(function(){b.textContent=t;},1500);
-  }).catch(function(){
-    var r=document.createRange();r.selectNodeContents(document.getElementById("code"));
-    var s=getSelection();s.removeAllRanges();s.addRange(r);
-  });
+  if(!codeVal) return;
+  navigator.clipboard.writeText(codeVal).then(function(){
+    var b=document.getElementById("copyBtn"),t=b.textContent;b.textContent="✓ Copié !";
+    setTimeout(function(){b.textContent=t;},1500);
+  }).catch(function(){});
 }
 </script>
 </body>
