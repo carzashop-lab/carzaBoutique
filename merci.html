@@ -30,6 +30,11 @@ background:linear-gradient(135deg,var(--pur),var(--glow));box-shadow:0 10px 26px
 .steps li{display:flex;gap:10px;font-size:14.5px}.steps b{color:var(--pur2)}
 .contact{font-size:14px;color:var(--fg);margin-top:10px}
 small{color:var(--mut);font-size:12.5px}
+.tuto{margin:20px 0 6px;text-align:left;background:#0d0720;border:1px solid var(--stroke);border-radius:14px;padding:16px 18px}
+.tuto h3{margin:0 0 10px;font-family:"Orbitron",sans-serif;font-size:15px;color:var(--cyan)}
+.tuto ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
+.tuto li{font-size:14px;line-height:1.45;color:var(--fg)}
+.tuto b{color:var(--pur2)}
 .err{color:var(--bad);font-size:14.5px;line-height:1.5}
 .spin{width:30px;height:30px;border:3px solid var(--stroke);border-top-color:var(--glow);border-radius:50%;
 animation:sp 1s linear infinite;margin:6px auto}
@@ -52,12 +57,24 @@ background:rgba(155,77,255,.18);color:var(--pur2)}
     <button class="btn ghost" id="copyBtn" onclick="copyCode()" hidden>📋 Copier le code</button>
 
     <div id="okBlock" hidden>
-      <a class="btn" id="dlBtn" href="https://drive.google.com/file/d/1OQhR0LiKNLRNrNSLclweoBFh7vOe0Pbq/view?usp=drive_link" target="_blank" rel="noopener" style="margin-top:16px">⬇ Télécharger VipOptimizer</a>
+      <a class="btn" id="dlBtn" href="https://drive.google.com/file/d/1WNItyi1hy1l0BE_OotpiCigIbYVObxFL/view?usp=sharing" target="_blank" rel="noopener" style="margin-top:16px">⬇ Télécharger VipOptimizer</a>
       <ul class="steps">
         <li><b>1.</b> Copie ton code ci-dessus (garde-le précieusement).</li>
         <li><b>2.</b> Clique « Télécharger VipOptimizer » puis lance le fichier.</li>
         <li><b>3.</b> Au démarrage, colle ton code → l'appli s'active.</li>
       </ul>
+
+      <div class="tuto">
+        <h3>🎮 Comment utiliser l'appli</h3>
+        <ol>
+          <li><b>Scanne ton PC</b> — onglet <b>Dashboard</b> → « Scanner le PC » (détecte ta config, ta carte mère, ton GPU).</li>
+          <li><b>Mesure ton score</b> « avant » → « Mesurer mon score ».</li>
+          <li><b>Applique les réglages</b> : onglets <b>Fortnite</b>, <b>NVIDIA</b> (profil 1-clic) et <b>BIOS</b> (adapté à ta carte mère).</li>
+          <li><b>Applique les tweaks</b> — onglet <b>Tweaks</b> → « Tout appliquer » (un point de restauration est créé avant).</li>
+          <li><b>Redémarre</b> le PC quand l'appli le demande.</li>
+          <li><b>Re-mesure ton score</b> « après » → compare tes FPS / latence. 🚀</li>
+        </ol>
+      </div>
       <p class="contact">💬 <b>Besoin d'aide ? Discord : discord.gg/ton_lien</b></p>
       <small>⚠ Ce code ne fonctionne que sur <b>un seul PC</b>. Une fois activé, il est lié à ta machine.</small>
     </div>
