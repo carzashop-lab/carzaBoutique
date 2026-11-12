@@ -63,15 +63,17 @@ export default async (req: Request) => {
   const plan = amount >= 24 ? "Pro" : "Standard";
 
   // parrain / collaborateur : passe via ?client_reference_id=REF dans le lien Stripe
+  const collabStore = getStore({ name: "vip_collabs", consistency: "strong" });
   let ref = (sess.client_reference_id || "").toString().trim().toUpperCase();
   let ref_name = "";
+  let col: any = null;
   if (ref) {
-    const col: any = await getStore({ name: "vip_collabs", consistency: "strong" }).get(ref, { type: "json" });
+    col = await collabStore.get(ref, { type: "json" });
     if (col && col.status === "active") ref_name = col.name || "";
-    else ref = ""; // ref inconnu/inactif -> on ignore
+    else { ref = ""; col = null; } // ref inconnu/inactif -> on ignore
   }
 
-  // 3) generer un code unique
+  // 3) generer un code unique (code client, 1 fois / PC)
   let code = genCode();
   for (let i = 0; i < 5; i++) {
     const clash = await s.get(code, { type: "text" });
@@ -87,6 +89,24 @@ export default async (req: Request) => {
   };
   await s.setJSON(code, lic);
   await s.set("sid:" + sid, code);
+
+  // 4) parrain : 2 ventes via son lien -> code gratuit auto (1 fois / PC)
+  if (col) {
+    col.sales = (col.sales || 0) + 1;
+    if (col.sales >= 2 && !col.reward_code) {
+      let fc = genCode();
+      for (let i = 0; i < 5; i++) { if (!(await s.get(fc, { type: "text" }))) break; fc = genCode(); }
+      const freeLic = {
+        code: fc, session_id: "reward_" + Date.now(), email: "", plan: "Offert parrainage", amount: 0,
+        used: false, used_at: null, machine_id: null, ref, ref_name: col.name, free: true,
+        created_at: new Date().toISOString(),
+      };
+      await s.setJSON(fc, freeLic);
+      col.reward_code = fc;
+      col.rewarded_at = new Date().toISOString();
+    }
+    await collabStore.setJSON(ref, col);
+  }
 
   return json({ code, plan, email, amount, ref_name });
 };

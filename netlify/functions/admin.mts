@@ -131,6 +131,7 @@ export default async (req: Request) => {
       revenue: Math.round(revenue * 100) / 100,
       commission: type === "collab" ? Math.round(revenue * 50) / 100 : 0,   // 50% (collab only)
       free_code_earned: sales.length >= 2,
+      reward_code: c.reward_code || null,   // code offert auto-généré à la 2e vente
       created_at: c.created_at,
     };
   }).sort((a, b) => b.sales_count - a.sales_count);

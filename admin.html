@@ -170,7 +170,9 @@ function renderCollabs(list){
     var tag = isCollab
       ? "<span class='pill' style='background:rgba(155,77,255,.16);color:var(--pur2)'>COLLAB · 50%</span>"
       : "<span class='pill' style='background:rgba(79,227,255,.14);color:var(--cyan)'>PARRAIN · gratuit</span>";
-    var earn = c.free_code_earned ? "<span class='earn'>🎁 A mérité un code gratuit (≥2 ventes)</span>" : "";
+    var earn = c.reward_code
+      ? "<span class='earn'>🎁 Code offert auto : <code style='color:var(--warn)'>"+esc(c.reward_code)+"</code> (donne-lui)</span>"
+      : (c.free_code_earned ? "<span class='earn'>🎁 A mérité un code gratuit (≥2 ventes)</span>" : "");
     var money = isCollab
       ? "<div><div class='muted'>Sa part (50%)</div><b style='color:var(--good)'>"+c.commission+" €</b></div>"
       : "<div><div class='muted'>Récompense</div><b style='color:var(--warn)'>code gratuit</b></div>";
