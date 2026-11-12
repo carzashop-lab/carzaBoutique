@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Gagner avec VipOptimizer</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600;700&display=swap">
+<style>
+:root{--bg:#0b0616;--bg2:#120a24;--panel:#1a0f30;--panel2:#22134a;--stroke:#3a1f66;--fg:#f2ecff;--mut:#a594cf;
+--pur:#9b4dff;--pur2:#c89bff;--glow:#b06bff;--cyan:#4fe3ff;--good:#5fe0a0;--warn:#ffb84d;--bad:#ff7a7a;color-scheme:dark;}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:24px;color:var(--fg);font-family:"Rajdhani","Segoe UI",sans-serif;
+background:radial-gradient(900px 500px at 50% -10%,rgba(123,46,242,.3),transparent 60%),var(--bg)}
+.wrap{max-width:600px;margin:0 auto}
+.head{text-align:center;margin-bottom:22px}
+h1{font-family:"Orbitron",sans-serif;font-size:26px;margin:0 0 6px;
+background:linear-gradient(90deg,#fff,var(--pur2),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:15px;margin:0}
+.card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--stroke);border-radius:20px;padding:26px;margin-bottom:20px}
+.card.a{border-color:var(--glow)}
+.card.b{border-color:var(--cyan)}
+.tag{display:inline-block;font-family:"Orbitron",sans-serif;font-size:11px;letter-spacing:1px;padding:5px 12px;border-radius:999px;margin-bottom:10px}
+.tag.a{background:rgba(155,77,255,.16);color:var(--pur2);border:1px solid var(--glow)}
+.tag.b{background:rgba(79,227,255,.14);color:var(--cyan);border:1px solid var(--cyan)}
+.card h2{font-family:"Orbitron",sans-serif;font-size:19px;margin:0 0 8px}
+.lead{color:var(--mut);font-size:14.5px;line-height:1.5;margin:0 0 14px}
+ul{margin:0 0 14px;padding-left:20px;display:flex;flex-direction:column;gap:7px}
+li{font-size:14.5px;line-height:1.4}b{color:var(--pur2)}
+.note{font-size:13px;color:var(--warn);background:rgba(255,184,77,.08);border:1px solid rgba(255,184,77,.3);border-radius:10px;padding:10px 12px;margin:0 0 14px}
+label{display:block;font-size:13px;color:var(--mut);margin:12px 0 6px;font-weight:600}
+input,textarea{width:100%;padding:12px 14px;border-radius:11px;border:1px solid var(--stroke);background:#0d0720;color:var(--fg);font-size:15px;font-family:inherit}
+textarea{min-height:80px;resize:vertical}
+.btn{width:100%;margin-top:16px;cursor:pointer;border:0;font-family:"Orbitron",sans-serif;font-weight:700;color:#fff;padding:14px;border-radius:12px;font-size:15px}
+.btn.a{background:linear-gradient(135deg,var(--pur),var(--glow));box-shadow:0 10px 26px rgba(155,77,255,.45)}
+.btn.b{background:linear-gradient(135deg,#1f9ab5,var(--cyan));box-shadow:0 10px 26px rgba(79,227,255,.3)}
+.msg{margin-top:12px;text-align:center;font-size:14.5px;font-weight:600;min-height:18px}
+.ok{color:var(--good)}.err{color:var(--bad)}
+.linkbox{display:flex;gap:8px;align-items:center;background:#0d0720;border:1px dashed var(--cyan);border-radius:10px;padding:10px 12px;margin-top:12px}
+.linkbox code{flex:1;word-break:break-all;color:var(--cyan);font-size:13px}
+.cbtn{cursor:pointer;border:1px solid var(--stroke);background:transparent;color:var(--cyan);border-radius:8px;padding:7px 12px;font-family:inherit;font-weight:700}
+.back{display:block;text-align:center;margin-top:8px;color:var(--cyan);text-decoration:none;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>Gagner avec VipOptimizer</h1>
+    <p class="sub">Deux façons de profiter de l'outil.</p>
+  </div>
+
+  <!-- ===== OFFRE A : COLLABORATEUR (50%) ===== -->
+  <div class="card a">
+    <span class="tag a">OFFRE 1 · ARGENT</span>
+    <h2>💸 Devenir collaborateur</h2>
+    <p class="lead">Tu fais la promo de VipOptimizer et tu touches de l'argent sur chaque vente.</p>
+    <ul>
+      <li><b>50 %</b> de commission (après taxes) sur chaque vente via ton lien.</li>
+      <li>Un lien perso : chaque achat est tracé à ton nom.</li>
+      <li>Demande validée à la main — réservé aux profils sérieux.</li>
+    </ul>
+    <div class="note">💳 Paiement des commissions par <b>virement bancaire, le 1ᵉʳ de chaque mois</b>.</div>
+
+    <form id="fa" onsubmit="return applyCollab(event)">
+      <label>Ton nom / pseudo *</label>
+      <input id="a_name" required placeholder="Ex: xMaitre">
+      <label>Ton Discord *</label>
+      <input id="a_discord" required placeholder="Ex: @maitre">
+      <label>Nombre total de followers (tous réseaux)</label>
+      <input id="a_followers" placeholder="Ex: 12 000 (TikTok + Insta + YT)">
+      <label>Pourquoi te choisir ?</label>
+      <textarea id="a_reason" placeholder="Ta commu, ton contenu, comment tu comptes vendre..."></textarea>
+      <button class="btn a" id="a_btn" type="submit">Envoyer ma demande</button>
+      <div class="msg" id="a_msg"></div>
+    </form>
+  </div>
+
+  <!-- ===== OFFRE B : PARRAINAGE (code gratuit) ===== -->
+  <div class="card b">
+    <span class="tag b">OFFRE 2 · GRATUIT</span>
+    <h2>🎁 Parraine 2 potes = ton outil offert</h2>
+    <p class="lead">Pas besoin d'être validé. Récupère ton lien tout de suite : si <b>2 personnes</b> achètent via ton lien, tu reçois un <b>code VipOptimizer gratuit</b>.</p>
+    <ul>
+      <li>Lien perso <b>immédiat</b>, aucune attente.</li>
+      <li><b>2 achats</b> via ton lien → 1 code offert (je te le donne sur Discord).</li>
+      <li>Parfait pour l'avoir gratuit en le montrant à tes potes.</li>
+    </ul>
+
+    <form id="fb" onsubmit="return getLink(event)">
+      <label>Ton pseudo *</label>
+      <input id="b_name" required placeholder="Ex: Maitre">
+      <label>Ton Discord (pour recevoir le code)</label>
+      <input id="b_discord" placeholder="Ex: @maitre">
+      <button class="btn b" id="b_btn" type="submit">Obtenir mon lien de parrainage</button>
+      <div class="msg" id="b_msg"></div>
+      <div id="b_link"></div>
+    </form>
+  </div>
+
+  <a class="back" href="/">← Retour au site</a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4.4.1/dist/email.min.js"></script>
+<script>
+var EMAILJS_PUBLIC_KEY = "JwoUu6v0aPD0dfSFS";
+var EMAILJS_SERVICE_ID = "service_37dyg7e";
+var EMAILJS_TEMPLATE_ID = "template_m0bq8fj";
+var API = "/.netlify/functions";
+
+function notify(d){
+  if(!window.emailjs || EMAILJS_PUBLIC_KEY.indexOf("TON_")===0) return;
+  try{ emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); }catch(e){}
+  emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+    code:"DEMANDE COLLABORATEUR", email:d.discord, plan:d.name,
+    amount:(d.followers||"?")+" followers", date:new Date().toLocaleString("fr-FR")
+  }).catch(function(){});
+}
+
+/* ----- OFFRE A : collaborateur (validé) ----- */
+function applyCollab(e){
+  e.preventDefault();
+  var d={ name:a_name.value.trim(), discord:a_discord.value.trim(),
+          followers:a_followers.value.trim(), reason:a_reason.value.trim() };
+  var msg=document.getElementById("a_msg"), btn=document.getElementById("a_btn");
+  if(!d.name||!d.discord){ msg.className="msg err"; msg.textContent="Nom et Discord obligatoires."; return false; }
+  btn.disabled=true; btn.textContent="Envoi…"; msg.textContent="";
+  fetch(API+"/collab-apply",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})
+   .then(function(r){return r.json();})
+   .then(function(j){
+     if(j.ok){ notify(d);
+       document.getElementById("fa").innerHTML="<div class='msg ok' style='font-size:17px'>✅ Demande envoyée !</div><p class='lead' style='margin-top:8px'>Je regarde ça et je te réponds sur Discord avec ton lien si c'est validé.</p>";
+     } else { msg.className="msg err"; msg.textContent="Erreur, réessaie."; btn.disabled=false; btn.textContent="Envoyer ma demande"; }
+   }).catch(function(){ msg.className="msg err"; msg.textContent="Erreur réseau."; btn.disabled=false; btn.textContent="Envoyer ma demande"; });
+  return false;
+}
+
+/* ----- OFFRE B : parrainage (lien immédiat) ----- */
+function getLink(e){
+  e.preventDefault();
+  var d={ name:b_name.value.trim(), discord:b_discord.value.trim() };
+  var msg=document.getElementById("b_msg"), btn=document.getElementById("b_btn");
+  if(!d.name){ msg.className="msg err"; msg.textContent="Mets ton pseudo."; return false; }
+  btn.disabled=true; btn.textContent="Génération…"; msg.textContent="";
+  fetch(API+"/parrain-link",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})
+   .then(function(r){return r.json();})
+   .then(function(j){
+     if(j.ok && j.link){
+       msg.className="msg ok"; msg.textContent="✅ Voici ton lien, partage-le !";
+       document.getElementById("b_link").innerHTML=
+         "<div class='linkbox'><code id='lk'>"+j.link+"</code><button type='button' class='cbtn' onclick=\"cp('"+j.link+"',this)\">Copier</button></div>";
+       btn.disabled=false; btn.textContent="Obtenir un autre lien";
+     } else { msg.className="msg err"; msg.textContent="Erreur, réessaie."; btn.disabled=false; btn.textContent="Obtenir mon lien de parrainage"; }
+   }).catch(function(){ msg.className="msg err"; msg.textContent="Erreur réseau."; btn.disabled=false; btn.textContent="Obtenir mon lien de parrainage"; });
+  return false;
+}
+function cp(t,b){ navigator.clipboard.writeText(t).then(function(){ var o=b.textContent;b.textContent="✓ Copié";setTimeout(function(){b.textContent=o;},1300); }).catch(function(){}); }
+</script>
+</body>
+</html>

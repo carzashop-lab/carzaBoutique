@@ -220,6 +220,12 @@ footer{padding-block:34px 44px; text-align:center; color:var(--mut); font-size:1
 
     </div>
     <p class="note">Après paiement, ton code + le téléchargement s'affichent tout de suite. Paiement sécurisé par carte via Stripe.<br>Le <b>16 €</b> te donne l'outil complet et ton code. Le <b>25 €</b> ajoute un <b>support à vie</b> : je t'aide perso à régler ton PC quand tu en as besoin.</p>
+
+    <div style="margin-top:22px;text-align:center;background:linear-gradient(180deg,var(--panel2),var(--bg2));border:1px solid var(--glow);border-radius:16px;padding:22px">
+      <div style="font-family:'Orbitron',sans-serif;font-size:17px;color:var(--pur2);margin-bottom:6px">💸 Gagne avec VipOptimizer</div>
+      <p style="color:var(--mut);font-size:14.5px;margin:0 0 14px"><b style="color:#fff">Collaborateur</b> : 50 % de commission sur chaque vente. &nbsp;•&nbsp; <b style="color:#fff">Parrainage</b> : 2 potes achètent = ton outil offert.</p>
+      <a class="cta ghost" href="/collaborateur.html">Voir les 2 offres</a>
+    </div>
   </section>
 
   <section>
@@ -261,10 +267,22 @@ var PLANS = {
 };
 /* ========================================================================= */
 
+/* parrainage : si on arrive avec ?ref=CODE, on le garde pour l'ajouter au paiement */
+(function(){
+  try{
+    var r = new URLSearchParams(location.search).get("ref");
+    if(r){ localStorage.setItem("vip_ref", r.trim().toUpperCase()); }
+  }catch(e){}
+})();
+function getRef(){ try{ return localStorage.getItem("vip_ref") || ""; }catch(e){ return ""; } }
+
 function scrollToPricing(){ document.querySelectorAll("section")[2].scrollIntoView({behavior:"smooth"}); }
 function buy(plan){
   plan = PLANS[plan] ? plan : "pro";
-  window.location.href = PLANS[plan].url;   // redirection directe vers Stripe
+  var u = PLANS[plan].url;
+  var ref = getRef();
+  if(ref){ u += (u.indexOf("?")>-1?"&":"?") + "client_reference_id=" + encodeURIComponent(ref); }
+  window.location.href = u;   // redirection directe vers Stripe (avec parrain si présent)
 }
 function closeM(){ document.getElementById("modal").classList.remove("open"); }
 document.getElementById("modal").addEventListener("click",function(e){ if(e.target===this) closeM(); });

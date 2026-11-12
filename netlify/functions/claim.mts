@@ -62,6 +62,15 @@ export default async (req: Request) => {
   const amount = (sess.amount_total || 0) / 100;
   const plan = amount >= 24 ? "Pro" : "Standard";
 
+  // parrain / collaborateur : passe via ?client_reference_id=REF dans le lien Stripe
+  let ref = (sess.client_reference_id || "").toString().trim().toUpperCase();
+  let ref_name = "";
+  if (ref) {
+    const col: any = await getStore({ name: "vip_collabs", consistency: "strong" }).get(ref, { type: "json" });
+    if (col && col.status === "active") ref_name = col.name || "";
+    else ref = ""; // ref inconnu/inactif -> on ignore
+  }
+
   // 3) generer un code unique
   let code = genCode();
   for (let i = 0; i < 5; i++) {
@@ -73,10 +82,11 @@ export default async (req: Request) => {
   const lic = {
     code, session_id: sid, email, plan, amount,
     used: false, used_at: null, machine_id: null,
+    ref, ref_name,
     created_at: new Date().toISOString(),
   };
   await s.setJSON(code, lic);
   await s.set("sid:" + sid, code);
 
-  return json({ code, plan, email, amount });
+  return json({ code, plan, email, amount, ref_name });
 };

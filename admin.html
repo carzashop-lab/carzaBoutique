@@ -20,28 +20,36 @@ input{width:100%;padding:13px 14px;border-radius:11px;border:1px solid var(--str
 .btn{cursor:pointer;border:0;font-family:"Orbitron",sans-serif;font-weight:700;color:#fff;padding:12px 22px;border-radius:11px;
 background:linear-gradient(135deg,var(--pur),var(--glow));box-shadow:0 8px 22px rgba(155,77,255,.4);font-size:14px}
 .btn.ghost{background:transparent;border:1.5px solid var(--stroke);color:var(--pur2);box-shadow:none}
-.btn.sm{padding:8px 14px;font-size:13px}
-.wrap{max-width:960px;margin:0 auto;padding:24px 0 60px}
+.btn.sm{padding:7px 12px;font-size:12.5px}
+.btn.ok{background:linear-gradient(135deg,#2e9e6b,#5fe0a0)}
+.btn.no{background:transparent;border:1.5px solid var(--bad);color:var(--bad);box-shadow:none}
+.wrap{max-width:1000px;margin:0 auto;padding:24px 0 60px}
 .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--stroke);border-radius:16px;padding:20px;margin:14px 0}
 .card h2{font-size:17px;color:var(--pur2);margin-bottom:12px}
 .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .field{display:flex;gap:8px;align-items:center;background:#0d0720;border:1px solid var(--stroke);border-radius:10px;padding:8px 10px;flex:1;min-width:0}
 .field input{border:0;background:transparent;padding:4px}
-table{width:100%;border-collapse:collapse;font-size:13.5px}
-th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--stroke)}
-th{color:var(--mut);font-size:12px;letter-spacing:.5px;text-transform:uppercase}
-.pill{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11.5px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:8px 7px;border-bottom:1px solid var(--stroke);vertical-align:top}
+th{color:var(--mut);font-size:11.5px;letter-spacing:.5px;text-transform:uppercase}
+.pill{display:inline-block;padding:3px 9px;border-radius:999px;font-size:11px;font-weight:700}
 .pill.used{background:rgba(95,224,160,.15);color:var(--good)}
 .pill.free{background:rgba(255,184,77,.15);color:var(--warn)}
+.pill.ref{background:rgba(79,227,255,.14);color:var(--cyan)}
 a{color:var(--cyan)}
 .muted{color:var(--mut);font-size:13px;line-height:1.5}
 .stat{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:6px}
-.stat .b{background:#0d0720;border:1px solid var(--stroke);border-radius:12px;padding:12px 16px;min-width:120px}
-.stat .n{font-family:"Orbitron",sans-serif;font-size:22px;color:var(--pur2)}
-.stat .l{font-size:12px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.stat .b{background:#0d0720;border:1px solid var(--stroke);border-radius:12px;padding:12px 16px;min-width:110px}
+.stat .n{font-family:"Orbitron",sans-serif;font-size:20px;color:var(--pur2)}
+.stat .l{font-size:11.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
 .verdict{margin-top:10px;font-size:14.5px;font-weight:600}
 .verdict.ok{color:var(--good)}.verdict.no{color:var(--bad)}
-code{background:#0d0720;border:1px solid var(--stroke);border-radius:6px;padding:2px 7px;font-family:"Orbitron",sans-serif;font-size:12.5px}
+code{background:#0d0720;border:1px solid var(--stroke);border-radius:6px;padding:2px 7px;font-family:"Orbitron",sans-serif;font-size:12px}
+.app{background:#0d0720;border:1px solid var(--stroke);border-radius:12px;padding:14px;margin:8px 0}
+.app .nm{font-weight:700;font-size:15px}.app .meta{color:var(--mut);font-size:13px;margin:4px 0}
+.linkbox{display:flex;gap:8px;align-items:center;background:#0d0720;border:1px dashed var(--glow);border-radius:10px;padding:8px 10px;margin-top:6px}
+.linkbox code{flex:1;word-break:break-all;background:transparent;border:0}
+.earn{color:var(--warn);font-weight:700}
 </style>
 </head>
 <body>
@@ -57,8 +65,12 @@ code{background:#0d0720;border:1px solid var(--stroke);border-radius:6px;padding
 
 <div class="wrap" id="app" hidden>
   <h1 style="font-size:24px;color:var(--pur2)">VipOptimizer — Admin</h1>
-  <p class="muted">Commandes et codes en temps réel (base de données).</p>
+  <div class="row" style="justify-content:space-between">
+    <p class="muted">Commandes, parrains et collaborateurs en temps réel.</p>
+    <button class="btn sm ghost" onclick="loadAll()">↻ Rafraîchir</button>
+  </div>
 
+  <!-- VERIF CODE -->
   <div class="card">
     <h2>🔎 Vérifier un code</h2>
     <div class="row">
@@ -68,15 +80,26 @@ code{background:#0d0720;border:1px solid var(--stroke);border-radius:6px;padding
     <div id="chkRes" class="verdict"></div>
   </div>
 
+  <!-- DEMANDES COLLAB -->
+  <div class="card">
+    <h2>📨 Demandes de collaborateur</h2>
+    <div id="apps"></div>
+    <p class="muted" id="appsEmpty" hidden>Aucune demande en attente.</p>
+  </div>
+
+  <!-- COLLABORATEURS -->
+  <div class="card">
+    <h2>🤝 Collaborateurs actifs</h2>
+    <div id="collabs"></div>
+    <p class="muted" id="colEmpty" hidden>Aucun collaborateur pour l'instant.</p>
+  </div>
+
+  <!-- COMMANDES -->
   <div class="card">
     <div class="stat" id="stats"></div>
-    <div class="row" style="justify-content:space-between">
-      <h2 style="margin:0">📦 Commandes</h2>
-      <button class="btn sm ghost" onclick="loadOrders()">↻ Rafraîchir</button>
-    </div>
-    <table id="tbl"><thead><tr><th>Date</th><th>Email</th><th>Offre</th><th>Code</th><th>Statut</th><th>Machine</th></tr></thead><tbody></tbody></table>
+    <h2 style="margin:8px 0">📦 Commandes</h2>
+    <table id="tbl"><thead><tr><th>Date</th><th>Email</th><th>Offre</th><th>Code</th><th>Statut</th><th>Parrain</th></tr></thead><tbody></tbody></table>
     <p class="muted" id="empty" hidden>Aucune commande pour l'instant.</p>
-    <p class="muted" id="loadErr" hidden style="color:var(--bad)"></p>
     <p style="margin-top:12px"><a href="https://dashboard.stripe.com/payments" target="_blank" rel="noopener">→ Vérifier les paiements sur Stripe</a></p>
   </div>
 </div>
@@ -84,55 +107,127 @@ code{background:#0d0720;border:1px solid var(--stroke);border-radius:6px;padding
 <script>
 var API = "/.netlify/functions";
 var PW = "";
+
 function unlock(){
   var v = document.getElementById("pw").value.trim();
-  if(!v){ return; }
+  if(!v) return;
   PW = v;
-  // test d'acces via l'API
   fetch(API + "/admin?pw=" + encodeURIComponent(PW))
-    .then(function(r){
-      if(r.status === 401){ document.getElementById("err").textContent = "Mot de passe incorrect."; return null; }
-      return r.json();
-    })
+    .then(function(r){ if(r.status===401){ document.getElementById("err").textContent="Mot de passe incorrect."; return null; } return r.json(); })
     .then(function(j){
       if(!j) return;
       document.getElementById("gate").hidden = true;
       document.getElementById("app").hidden = false;
-      renderOrders(j.orders || []);
+      renderAll(j);
     })
-    .catch(function(){ document.getElementById("err").textContent = "Erreur réseau. Réessaie."; });
+    .catch(function(){ document.getElementById("err").textContent="Erreur réseau."; });
 }
-function loadOrders(){
-  fetch(API + "/admin?pw=" + encodeURIComponent(PW))
-    .then(function(r){ return r.json(); })
-    .then(function(j){ renderOrders(j.orders || []); })
-    .catch(function(){ document.getElementById("loadErr").hidden=false;
-      document.getElementById("loadErr").textContent="Impossible de charger les commandes."; });
+function loadAll(){
+  fetch(API + "/admin?pw=" + encodeURIComponent(PW)).then(function(r){ return r.json(); }).then(renderAll).catch(function(){});
 }
 function esc(s){ return (s||"").toString().replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
 function fdate(s){ try{ return new Date(s).toLocaleString("fr-FR"); }catch(e){ return s||""; } }
+
+function renderAll(j){
+  renderApps(j.apps||[]);
+  renderCollabs(j.collabs||[]);
+  renderOrders(j.orders||[]);
+}
+
+/* ----- demandes ----- */
+function renderApps(list){
+  var pend = list.filter(function(a){ return a.status==="pending"; });
+  var box = document.getElementById("apps"); box.innerHTML="";
+  document.getElementById("appsEmpty").hidden = pend.length>0;
+  pend.forEach(function(a){
+    var el = document.createElement("div"); el.className="app";
+    el.innerHTML =
+      "<div class='nm'>"+esc(a.name)+" <span class='muted'>· "+esc(a.discord)+"</span></div>"+
+      "<div class='meta'>👥 "+esc(a.followers||"?")+" followers</div>"+
+      "<div class='meta'>"+esc(a.reason||"(pas de raison donnée)")+"</div>"+
+      "<div class='row' style='margin-top:8px'>"+
+      "<button class='btn sm ok' onclick=\"accept('"+a.id+"')\">✓ Accepter</button>"+
+      "<button class='btn sm no' onclick=\"reject('"+a.id+"')\">✕ Refuser</button></div>"+
+      "<div class='linkRes'></div>";
+    box.appendChild(el);
+  });
+}
+function accept(id){
+  post({action:"accept", id:id}).then(function(j){
+    if(j && j.link){ alert("Collaborateur accepté !\n\nSon lien à lui envoyer :\n"+j.link); }
+    loadAll();
+  });
+}
+function reject(id){ post({action:"reject", id:id}).then(loadAll); }
+
+/* ----- collaborateurs ----- */
+function renderCollabs(list){
+  var box = document.getElementById("collabs"); box.innerHTML="";
+  document.getElementById("colEmpty").hidden = list.length>0;
+  list.forEach(function(c){
+    var el = document.createElement("div"); el.className="app";
+    var isCollab = (c.type||"collab")==="collab";
+    var tag = isCollab
+      ? "<span class='pill' style='background:rgba(155,77,255,.16);color:var(--pur2)'>COLLAB · 50%</span>"
+      : "<span class='pill' style='background:rgba(79,227,255,.14);color:var(--cyan)'>PARRAIN · gratuit</span>";
+    var earn = c.free_code_earned ? "<span class='earn'>🎁 A mérité un code gratuit (≥2 ventes)</span>" : "";
+    var money = isCollab
+      ? "<div><div class='muted'>Sa part (50%)</div><b style='color:var(--good)'>"+c.commission+" €</b></div>"
+      : "<div><div class='muted'>Récompense</div><b style='color:var(--warn)'>code gratuit</b></div>";
+    el.innerHTML =
+      "<div class='nm'>"+tag+" "+esc(c.name)+" <code>"+esc(c.ref)+"</code> <span class='muted'>· "+esc(c.discord)+"</span></div>"+
+      "<div class='row' style='gap:18px;margin:8px 0'>"+
+        "<div><div class='muted'>Ventes</div><b>"+c.sales_count+"</b></div>"+
+        "<div><div class='muted'>CA</div><b>"+c.revenue+" €</b></div>"+
+        money+
+      "</div>"+
+      (earn?"<div class='meta'>"+earn+"</div>":"")+
+      "<div class='linkbox'><code>"+esc(c.link)+"</code>"+
+        "<button class='btn sm ghost' onclick=\"copyTxt('"+esc(c.link)+"',this)\">Copier</button></div>"+
+      "<div class='row' style='margin-top:8px'>"+
+        "<button class='btn sm' onclick=\"freeCode('"+c.ref+"')\">🎁 Générer un code gratuit</button></div>";
+    box.appendChild(el);
+  });
+}
+function freeCode(ref){
+  post({action:"free_code", ref:ref}).then(function(j){
+    if(j && j.code){ alert("Code gratuit généré pour ce collaborateur :\n\n"+j.code+"\n\nDonne-lui ce code."); }
+    loadAll();
+  });
+}
+
+/* ----- commandes ----- */
 function renderOrders(list){
   var tb = document.querySelector("#tbl tbody"); tb.innerHTML="";
   document.getElementById("empty").hidden = list.length>0;
-  var used = 0;
+  var used=0, ca=0;
   list.forEach(function(o){
     if(o.used) used++;
+    ca += (o.amount||0);
     var tr = document.createElement("tr");
     tr.innerHTML =
       "<td>"+fdate(o.created_at)+"</td>"+
-      "<td style='word-break:break-all;max-width:170px'>"+esc(o.email)+"</td>"+
+      "<td style='word-break:break-all;max-width:150px'>"+esc(o.email)+"</td>"+
       "<td>"+esc(o.plan)+"</td>"+
       "<td><code>"+esc(o.code)+"</code></td>"+
       "<td><span class='pill "+(o.used?"used":"free")+"'>"+(o.used?"Activé":"Pas encore")+"</span></td>"+
-      "<td class='muted' style='word-break:break-all;max-width:120px'>"+esc(o.machine_id? (o.machine_id.slice(0,10)+"…") : "—")+"</td>";
+      "<td>"+(o.ref_name?("<span class='pill ref'>"+esc(o.ref_name)+"</span>"):"<span class='muted'>—</span>")+"</td>";
     tb.appendChild(tr);
   });
-  var st = document.getElementById("stats");
-  st.innerHTML =
+  document.getElementById("stats").innerHTML =
     "<div class='b'><div class='n'>"+list.length+"</div><div class='l'>Ventes</div></div>"+
-    "<div class='b'><div class='n'>"+used+"</div><div class='l'>Activés</div></div>"+
-    "<div class='b'><div class='n'>"+(list.length-used)+"</div><div class='l'>En attente</div></div>";
+    "<div class='b'><div class='n'>"+Math.round(ca*100)/100+" €</div><div class='l'>CA total</div></div>"+
+    "<div class='b'><div class='n'>"+used+"</div><div class='l'>Activés</div></div>";
 }
+
+/* ----- utils ----- */
+function post(body){
+  body.pw = PW;
+  return fetch(API + "/admin?pw=" + encodeURIComponent(PW), {
+    method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify(body)
+  }).then(function(r){ return r.json(); }).catch(function(){ return null; });
+}
+function copyTxt(t,btn){ navigator.clipboard.writeText(t).then(function(){ var o=btn.textContent;btn.textContent="✓";setTimeout(function(){btn.textContent=o;},1200); }).catch(function(){}); }
 function verify(){
   var c = document.getElementById("chk").value.trim();
   var box = document.getElementById("chkRes");
@@ -145,11 +240,9 @@ function verify(){
         var o=j.order;
         box.className="verdict ok";
         box.innerHTML = "✅ Code VALIDE — "+esc(o.plan||"")+" ("+(o.amount!=null?o.amount+" €":"")+")<br>"+
-          "Email : "+esc(o.email||"—")+" · "+(o.used?("Déjà activé le "+fdate(o.used_at)):"Pas encore activé");
-      } else {
-        box.className="verdict no";
-        box.textContent = "❌ Code INCONNU — aucune commande avec ce code.";
-      }
+          "Email : "+esc(o.email||"—")+" · "+(o.used?("Activé le "+fdate(o.used_at)):"Pas encore activé")+
+          (o.ref_name?(" · Parrain : "+esc(o.ref_name)):"");
+      } else { box.className="verdict no"; box.textContent="❌ Code INCONNU."; }
     })
     .catch(function(){ box.className="verdict no"; box.textContent="Erreur réseau."; });
 }
