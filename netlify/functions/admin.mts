@@ -86,6 +86,13 @@ export default async (req: Request) => {
       return json({ ok: true });
     }
 
+    if (action === "remove") {
+      const ref = (body.ref || "").toString().trim().toUpperCase();
+      if (!ref) return json({ error: "no_ref" }, 400);
+      try { await collabs().delete(ref); } catch (e) { /* déjà absent */ }
+      return json({ ok: true });
+    }
+
     if (action === "free_code") {
       const ref = (body.ref || "").toString().trim().toUpperCase();
       const col: any = await collabs().get(ref, { type: "json" });

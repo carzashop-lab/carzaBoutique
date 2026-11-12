@@ -187,9 +187,14 @@ function renderCollabs(list){
       "<div class='linkbox'><code>"+esc(c.link)+"</code>"+
         "<button class='btn sm ghost' onclick=\"copyTxt('"+esc(c.link)+"',this)\">Copier</button></div>"+
       "<div class='row' style='margin-top:8px'>"+
-        "<button class='btn sm' onclick=\"freeCode('"+c.ref+"')\">🎁 Générer un code gratuit</button></div>";
+        "<button class='btn sm' onclick=\"freeCode('"+c.ref+"')\">🎁 Générer un code gratuit</button>"+
+        "<button class='btn sm no' onclick=\"removeCol('"+c.ref+"','"+esc(c.name)+"')\">✕ Retirer</button></div>";
     box.appendChild(el);
   });
+}
+function removeCol(ref,name){
+  if(!confirm("Retirer "+name+" ("+ref+") ?\nSon lien ne marchera plus. Ses ventes déjà faites restent dans les commandes."))return;
+  post({action:"remove", ref:ref}).then(loadAll);
 }
 function freeCode(ref){
   post({action:"free_code", ref:ref}).then(function(j){
