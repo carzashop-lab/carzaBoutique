@@ -4,43 +4,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Merci — VipOptimizer</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Rajdhani:wght@500;600;700&display=swap">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#0b0616;--bg2:#120a24;--panel:#1a0f30;--stroke:#3a1f66;--fg:#f2ecff;--mut:#a594cf;
---pur:#9b4dff;--pur2:#c89bff;--glow:#b06bff;--cyan:#4fe3ff;--good:#5fe0a0;--bad:#ff7a7a;color-scheme:dark;}
+:root{--bg:#060810;--bg2:#0a0e18;--card:#0f1620;--card2:#141d2b;--stroke:#212c3e;--stroke2:#2d3a50;
+--vio:#8B5CF6;--cy:#3fd8ff;--glow:#A78BFA;--good:#35D39A;--bad:#F06464;--text:#F6F8FD;--mut:#8b96a9;
+--grad:linear-gradient(135deg,#b84dff,#7c4dff,#3fd8ff);color-scheme:dark;}
 *{box-sizing:border-box}
-body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;
-background:radial-gradient(900px 500px at 50% -10%,rgba(123,46,242,.3),transparent 60%),var(--bg);
-color:var(--fg);font-family:"Rajdhani","Segoe UI",sans-serif}
-.box{max-width:520px;width:100%;background:linear-gradient(180deg,var(--panel),var(--bg2));
-border:1px solid var(--glow);border-radius:22px;padding:34px;text-align:center;
-box-shadow:0 20px 60px rgba(123,46,242,.4)}
-h1{font-family:"Orbitron",sans-serif;font-size:28px;margin:0 0 6px;
-background:linear-gradient(90deg,#fff,var(--pur2),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent}
-.check{font-size:46px;margin-bottom:8px}
+body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;color:var(--text);
+font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;
+background:radial-gradient(1000px 540px at 50% -10%,rgba(124,77,255,.22),transparent 60%),radial-gradient(700px 400px at 80% 10%,rgba(63,216,255,.1),transparent 55%),var(--bg)}
+.box{max-width:540px;width:100%;position:relative;border-radius:24px;padding:38px 34px;text-align:center;
+background:linear-gradient(180deg,var(--card2),var(--card)) padding-box,var(--grad) border-box;border:1px solid transparent;
+box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 0 1px rgba(124,77,255,.12)}
+h1{font-family:'Space Grotesk',sans-serif;font-size:29px;margin:0 0 6px;letter-spacing:-.5px;
+background:linear-gradient(90deg,#fff,var(--glow),var(--cy));-webkit-background-clip:text;background-clip:text;color:transparent}
+.check{font-size:50px;margin-bottom:6px;filter:drop-shadow(0 6px 18px rgba(53,211,154,.4))}
 p{color:var(--mut);line-height:1.55;font-size:15px}
-.codebox{background:#0d0720;border:1px dashed var(--glow);border-radius:14px;padding:20px;margin:20px 0}
-.clabel{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
-#code{font-family:"Orbitron",sans-serif;font-size:32px;letter-spacing:4px;color:#fff;word-break:break-all}
-.btn{display:inline-flex;align-items:center;gap:8px;margin-top:6px;cursor:pointer;border:0;
-font-family:"Orbitron",sans-serif;font-weight:700;font-size:15px;color:#fff;padding:13px 26px;border-radius:12px;
-background:linear-gradient(135deg,var(--pur),var(--glow));box-shadow:0 10px 26px rgba(155,77,255,.45);text-decoration:none}
-.btn.ghost{background:transparent;border:1.5px solid var(--glow);color:var(--pur2);box-shadow:none}
-.steps{text-align:left;margin:18px 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px}
-.steps li{display:flex;gap:10px;font-size:14.5px}.steps b{color:var(--pur2)}
-.contact{font-size:14px;color:var(--fg);margin-top:10px}
+.codebox{position:relative;background:#0a0f18;border:1px dashed var(--stroke2);border-radius:16px;padding:22px;margin:22px 0;overflow:hidden}
+.codebox::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(124,77,255,.12),transparent 65%)}
+.clabel{position:relative;font-size:11.5px;letter-spacing:2.5px;text-transform:uppercase;color:var(--cy);margin-bottom:12px;font-weight:600}
+#code{position:relative;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:34px;letter-spacing:5px;color:#fff;word-break:break-all}
+.btn{display:inline-flex;align-items:center;gap:9px;margin-top:6px;cursor:pointer;border:0;
+font-family:Inter;font-weight:600;font-size:15px;color:#fff;padding:14px 28px;border-radius:13px;text-decoration:none;
+background:var(--grad);background-size:160% 160%;box-shadow:0 12px 30px rgba(124,77,255,.4);transition:transform .16s,box-shadow .16s,background-position .4s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(124,77,255,.55);background-position:100% 0}
+.btn.ghost{background:var(--card2);border:1px solid var(--stroke2);color:var(--text);box-shadow:none}
+.btn.ghost:hover{border-color:var(--glow)}
+.steps{text-align:left;margin:18px 0;padding:0;list-style:none;display:flex;flex-direction:column;gap:11px}
+.steps li{display:flex;gap:11px;font-size:14.5px;color:var(--text)}.steps b{color:var(--glow)}
+.contact{font-size:14px;color:var(--text);margin-top:12px}
 small{color:var(--mut);font-size:12.5px}
-.tuto{margin:20px 0 6px;text-align:left;background:#0d0720;border:1px solid var(--stroke);border-radius:14px;padding:16px 18px}
-.tuto h3{margin:0 0 10px;font-family:"Orbitron",sans-serif;font-size:15px;color:var(--cyan)}
-.tuto ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:9px}
-.tuto li{font-size:14px;line-height:1.45;color:var(--fg)}
-.tuto b{color:var(--pur2)}
+.tuto{margin:20px 0 6px;text-align:left;background:#0a0f18;border:1px solid var(--stroke);border-radius:16px;padding:18px 20px}
+.tuto h3{margin:0 0 12px;font-family:'Space Grotesk',sans-serif;font-size:15.5px;color:var(--cy)}
+.tuto ol{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:10px}
+.tuto li{font-size:14px;line-height:1.5;color:var(--text)}
+.tuto b{color:var(--glow)}
 .err{color:var(--bad);font-size:14.5px;line-height:1.5}
-.spin{width:30px;height:30px;border:3px solid var(--stroke);border-top-color:var(--glow);border-radius:50%;
-animation:sp 1s linear infinite;margin:6px auto}
+.spin{width:30px;height:30px;border:3px solid var(--stroke2);border-top-color:var(--glow);border-radius:50%;animation:sp 1s linear infinite;margin:6px auto}
 @keyframes sp{to{transform:rotate(360deg)}}
-.plan{display:inline-block;margin-top:8px;padding:4px 12px;border-radius:999px;font-weight:700;font-size:13px;
-background:rgba(155,77,255,.18);color:var(--pur2)}
+.plan{display:inline-block;margin-top:8px;padding:5px 14px;border-radius:999px;font-weight:700;font-size:13px;
+background:rgba(124,77,255,.16);color:var(--glow);border:1px solid rgba(124,77,255,.3)}
 </style>
 </head>
 <body>
@@ -60,19 +65,18 @@ background:rgba(155,77,255,.18);color:var(--pur2)}
       <a class="btn" id="dlBtn" href="https://drive.google.com/file/d/1oSYADa0mlkLa-bmB3ZpeLU3gUb4-BPrD/view?usp=sharing" target="_blank" rel="noopener" style="margin-top:16px">⬇ Télécharger VipOptimizer</a>
       <ul class="steps">
         <li><b>1.</b> Copie ton code ci-dessus (garde-le précieusement).</li>
-        <li><b>2.</b> Clique « Télécharger VipOptimizer » puis lance le fichier.</li>
+        <li><b>2.</b> Clique « Télécharger VipOptimizer » puis lance le fichier en admin.</li>
         <li><b>3.</b> Au démarrage, colle ton code → l'appli s'active.</li>
       </ul>
 
       <div class="tuto">
         <h3>🎮 Comment utiliser l'appli</h3>
         <ol>
-          <li><b>Scanne ton PC</b> — onglet <b>Dashboard</b> → « Scanner le PC » (détecte ta config, ta carte mère, ton GPU).</li>
-          <li><b>Mesure ton score</b> « avant » → « Mesurer mon score ».</li>
-          <li><b>Applique les réglages</b> : onglets <b>Fortnite</b>, <b>NVIDIA</b> (profil 1-clic) et <b>BIOS</b> (adapté à ta carte mère).</li>
-          <li><b>Applique les tweaks</b> — onglet <b>Tweaks</b> → « Tout appliquer » (un point de restauration est créé avant).</li>
-          <li><b>Redémarre</b> le PC quand l'appli le demande.</li>
-          <li><b>Re-mesure ton score</b> « après » → compare tes FPS / latence. 🚀</li>
+          <li><b>Scanne ton PC</b> — Dashboard → « Scanner » (détecte ta config, ta carte mère, ton GPU et calcule ton score /100).</li>
+          <li><b>Benchmark « avant »</b> — « Benchmark 15 s » puis « Comparer avant » pour enregistrer tes FPS de départ.</li>
+          <li><b>Applique les réglages</b> : onglets <b>Fortnite</b>, <b>NVIDIA</b> (profil 1-clic) et <b>Optimisations</b> → « Appliquer tout » (point de restauration créé avant).</li>
+          <li><b>BIOS</b> — photographie les réglages affichés, puis « C'est fait → Redémarrer dans le BIOS ».</li>
+          <li><b>Benchmark « après »</b> — re-« Benchmark 15 s » + « Comparer après » : ton gain FPS / latence s'affiche. 🚀</li>
         </ol>
       </div>
       <p class="contact">💬 <b>Besoin d'aide ? Discord : discord.gg/ton_lien</b></p>
