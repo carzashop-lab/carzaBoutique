@@ -106,6 +106,13 @@ code{background:#0a0f18;border:1px solid var(--stroke2);border-radius:7px;paddin
     <p class="muted" id="colEmpty" hidden>Aucun collaborateur pour l'instant.</p>
   </div>
 
+  <!-- AVIS CLIENTS -->
+  <div class="card">
+    <h2>⭐ Avis clients (modération)</h2>
+    <div id="reviews"></div>
+    <p class="muted" id="revEmpty" hidden>Aucun avis pour l'instant.</p>
+  </div>
+
   <!-- COMMANDES -->
   <div class="card">
     <div class="stat" id="stats"></div>
@@ -131,11 +138,45 @@ function unlock(){
       document.getElementById("gate").hidden = true;
       document.getElementById("app").hidden = false;
       renderAll(j);
+      loadReviews();
     })
     .catch(function(){ document.getElementById("err").textContent="Erreur réseau."; });
 }
 function loadAll(){
   fetch(API + "/admin?pw=" + encodeURIComponent(PW)).then(function(r){ return r.json(); }).then(renderAll).catch(function(){});
+  loadReviews();
+}
+
+/* ----- avis clients ----- */
+function loadReviews(){
+  fetch(API + "/reviews?pw=" + encodeURIComponent(PW)).then(function(r){ return r.json(); }).then(renderReviews).catch(function(){});
+}
+function renderReviews(j){
+  var list=(j&&j.reviews)||[]; var box=document.getElementById("reviews"); box.innerHTML="";
+  document.getElementById("revEmpty").hidden = list.length>0;
+  // en attente d'abord
+  list.sort(function(a,b){ return (a.status==="approved"?1:0)-(b.status==="approved"?1:0); });
+  list.forEach(function(r){
+    var pend = r.status!=="approved";
+    var stars = "★".repeat(Math.max(1,Math.min(5, r.stars||5)));
+    var el=document.createElement("div"); el.className="app";
+    el.innerHTML =
+      "<div class='nm' style='color:var(--warn)'>"+stars+" <span class='muted' style='font-weight:400'>"+esc(r.name)+(r.handle?(" · "+esc(r.handle)):"")+(r.platform?(" · "+esc(r.platform)):"")+"</span> "+
+        (pend?"<span class='pill free'>EN ATTENTE</span>":"<span class='pill used'>PUBLIÉ</span>")+"</div>"+
+      (r.gain?"<div class='meta earn'>⚡ "+esc(r.gain)+"</div>":"")+
+      "<div class='meta' style='color:var(--fg)'>"+esc(r.text)+"</div>"+
+      "<div class='row' style='margin-top:8px'>"+
+        (pend?"<button class='btn sm ok' onclick=\"modReview('approve','"+r.id+"')\">✓ Publier</button>":"")+
+        "<button class='btn sm no' onclick=\"modReview('"+(pend?"reject":"delete")+"','"+r.id+"')\">✕ "+(pend?"Refuser":"Retirer")+"</button>"+
+      "</div>";
+    box.appendChild(el);
+  });
+}
+function modReview(action,id){
+  if(action==="delete" && !confirm("Retirer cet avis du site ?")) return;
+  fetch(API + "/reviews?pw=" + encodeURIComponent(PW), {
+    method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({pw:PW, action:action, id:id})
+  }).then(function(r){ return r.json(); }).then(function(){ loadReviews(); }).catch(function(){});
 }
 function esc(s){ return (s||"").toString().replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
 function fdate(s){ try{ return new Date(s).toLocaleString("fr-FR"); }catch(e){ return s||""; } }
